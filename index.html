@@ -627,6 +627,16 @@
             min-height: 1100px;
         }
         
+        #pageBreakContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 14;
+        }
+        
         /* PDF Page Break Indicator */
         .page-break-line {
             position: absolute;
@@ -636,11 +646,10 @@
             background: linear-gradient(90deg, transparent, #ff6b6b 20%, #ff6b6b 80%, transparent);
             pointer-events: none;
             z-index: 15;
-            opacity: 0.5;
+            opacity: 0.6;
         }
         
         .page-break-line::before {
-            content: '📄 PAGE 1 ENDS HERE - PAGE 2 STARTS BELOW';
             position: absolute;
             top: -25px;
             left: 50%;
@@ -1050,7 +1059,7 @@
             <div style="position: relative;">
                 <div class="preview-wrapper">
                     <div id="paperPreview"></div>
-                    <div class="page-break-line" id="pageBreakLine" style="top: 1040px;"></div>
+                    <div id="pageBreakContainer"></div>
                     <canvas id="drawingCanvas"></canvas>
                 </div>
             </div>
@@ -1305,6 +1314,49 @@
             }
         }
         
+        function updatePageBreakIndicators() {
+            const preview = document.getElementById('paperPreview');
+            const container = document.getElementById('pageBreakContainer');
+            
+            // Clear existing indicators
+            container.innerHTML = '';
+            
+            // Calculate A4 page height in pixels
+            // A4 is 297mm tall, our preview is 800px wide
+            // With padding of 60px top/bottom, usable height per page is approximately 1040px
+            const pageHeight = 1040; // Approximate usable height per A4 page
+            const totalHeight = preview.scrollHeight;
+            const numPages = Math.ceil(totalHeight / pageHeight);
+            
+            // Add page break lines
+            for (let i = 1; i < numPages; i++) {
+                const breakLine = document.createElement('div');
+                breakLine.className = 'page-break-line';
+                breakLine.style.top = (i * pageHeight) + 'px';
+                breakLine.setAttribute('data-page', i);
+                container.appendChild(breakLine);
+            }
+            
+            // Update the CSS content dynamically for each line
+            const style = document.createElement('style');
+            let cssContent = '';
+            for (let i = 1; i < numPages; i++) {
+                cssContent += `
+                    .page-break-line[data-page="${i}"]::before {
+                        content: '📄 PAGE ${i} ENDS HERE - PAGE ${i + 1} STARTS BELOW';
+                    }
+                `;
+            }
+            style.textContent = cssContent;
+            
+            // Remove old dynamic styles
+            const oldStyle = document.getElementById('dynamic-page-breaks');
+            if (oldStyle) oldStyle.remove();
+            
+            style.id = 'dynamic-page-breaks';
+            document.head.appendChild(style);
+        }
+        
         function updateImperfection(value) {
             document.getElementById('imperfectionValue').textContent = value;
             // Add slight random rotation/positioning to text for handwritten feel
@@ -1338,8 +1390,11 @@
             preview.style.lineHeight = lineSpacing;
             preview.style.color = currentInkColor;
             
-            // Resize canvas after content update
-            setTimeout(resizeCanvas, 100);
+            // Resize canvas and update page break indicators after content update
+            setTimeout(() => {
+                resizeCanvas();
+                updatePageBreakIndicators();
+            }, 100);
         }
 
         function processMarkdown(text) {
