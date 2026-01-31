@@ -1321,17 +1321,21 @@
             // Clear existing indicators
             container.innerHTML = '';
             
-            // Calculate A4 page height in pixels
-            // A4 is 297mm tall, our preview is 800px wide
-            // With padding of 60px top/bottom, usable height per page is approximately 1040px
-            const pageHeight = 1040; // Approximate usable height per A4 page
+            // Calculate exact A4 page height based on our 800px width
+            // A4 ratio is 210mm : 297mm = 1 : 1.414
+            // Our preview width is 800px
+            // So A4 height should be 800 * 1.414 = 1131.2px
+            // BUT we have padding: 60px top + 60px bottom = 120px total
+            // So actual usable content area per page = 1131.2px - 120px = 1011.2px
+            const pageHeight = 1011; // Exact usable height per A4 page
             const totalHeight = preview.scrollHeight;
             const numPages = Math.ceil(totalHeight / pageHeight);
             
-            // Add page break lines
+            // Add page break lines at exact positions
             for (let i = 1; i < numPages; i++) {
                 const breakLine = document.createElement('div');
                 breakLine.className = 'page-break-line';
+                // Position at exact page boundary
                 breakLine.style.top = (i * pageHeight) + 'px';
                 breakLine.setAttribute('data-page', i);
                 container.appendChild(breakLine);
@@ -1447,7 +1451,7 @@
                 const preview = document.getElementById('paperPreview');
                 const canvasEl = document.getElementById('drawingCanvas');
                 
-                // A4 dimensions in mm at 72 DPI
+                // A4 dimensions in mm
                 const a4Width = 210;
                 const a4Height = 297;
                 
@@ -1479,16 +1483,10 @@
                     tempCtx.drawImage(canvasEl, 0, 0, tempCanvas.width, tempCanvas.height);
                 }
 
-                // Calculate dimensions maintaining aspect ratio
-                const imgAspectRatio = tempCanvas.width / tempCanvas.height;
-                const a4AspectRatio = a4Width / a4Height;
-                
-                let imgWidth = a4Width;
-                let imgHeight = a4Width / imgAspectRatio;
-                
-                // If image is taller than A4, split into pages
-                const pageHeight = a4Height;
-                const pageHeightPx = (tempCanvas.height / imgHeight) * pageHeight;
+                // Calculate page height in pixels - MUST MATCH the indicator calculation
+                // Preview is 800px wide, A4 ratio is 1:1.414, so height = 1131.2px
+                // With 60px padding top/bottom (120px total), usable area = 1011px
+                const pageHeightPx = 1011 * scale; // Scale up for the canvas
                 const totalPages = Math.ceil(tempCanvas.height / pageHeightPx);
                 
                 for (let page = 0; page < totalPages; page++) {
@@ -1499,7 +1497,8 @@
                     // Create a canvas for this page
                     const pageCanvas = document.createElement('canvas');
                     pageCanvas.width = tempCanvas.width;
-                    pageCanvas.height = Math.min(pageHeightPx, tempCanvas.height - (page * pageHeightPx));
+                    const remainingHeight = tempCanvas.height - (page * pageHeightPx);
+                    pageCanvas.height = Math.min(pageHeightPx, remainingHeight);
                     const pageCtx = pageCanvas.getContext('2d');
                     
                     // Fill background
@@ -1518,11 +1517,8 @@
                     // Convert to image
                     const pageImgData = pageCanvas.toDataURL('image/jpeg', 1.0);
                     
-                    // Calculate height for this page (in case it's the last page and shorter)
-                    const thisPageHeight = (pageCanvas.height / tempCanvas.height) * imgHeight;
-                    
-                    // Add to PDF without stretching
-                    pdf.addImage(pageImgData, 'JPEG', 0, 0, imgWidth, thisPageHeight);
+                    // Add to PDF - fill the entire A4 page
+                    pdf.addImage(pageImgData, 'JPEG', 0, 0, a4Width, a4Height);
                     
                     // Add page number
                     if (totalPages > 1) {
