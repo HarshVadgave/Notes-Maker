@@ -626,6 +626,35 @@
             width: 800px;
             min-height: 1100px;
         }
+        
+        /* PDF Page Break Indicator */
+        .page-break-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff6b6b 20%, #ff6b6b 80%, transparent);
+            pointer-events: none;
+            z-index: 15;
+            opacity: 0.5;
+        }
+        
+        .page-break-line::before {
+            content: '📄 PAGE 1 ENDS HERE - PAGE 2 STARTS BELOW';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff6b6b;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+            font-family: 'League Spartan', sans-serif;
+            letter-spacing: 0.5px;
+        }
 
         #paperPreview {
             background: var(--paper-white);
@@ -636,6 +665,17 @@
             box-shadow: 0 10px 50px rgba(0, 0, 0, 0.15);
             position: relative;
             overflow: visible;
+        }
+        
+        #paperPreview.compact-mode {
+            column-count: 2;
+            column-gap: 40px;
+            column-rule: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+        
+        #paperPreview.compact-mode h1,
+        #paperPreview.compact-mode h2 {
+            column-span: all;
         }
 
         #paperPreview.lined {
@@ -663,9 +703,9 @@
             position: absolute;
             top: 0;
             left: 0;
-            cursor: crosshair;
+            cursor: default;
             z-index: 10;
-            pointer-events: auto;
+            pointer-events: none;
         }
         
         .preview-wrapper {
@@ -909,7 +949,7 @@
             <div class="control-section">
                 <h3>✏️ Drawing Tools</h3>
                 <div class="drawing-tools">
-                    <button class="tool-btn active" onclick="selectTool('pen')">Pen</button>
+                    <button class="tool-btn" onclick="selectTool('pen')">Pen</button>
                     <button class="tool-btn" onclick="selectTool('eraser')">Eraser</button>
                     <button class="tool-btn" onclick="selectTool('line')">Line</button>
                     <button class="tool-btn" onclick="selectTool('arrow')">Arrow</button>
@@ -926,6 +966,35 @@
             <div class="control-section">
                 <h3>⚙️ Font Settings</h3>
                 <div class="control-group">
+                    <label>Handwriting Style:</label>
+                    <div class="style-grid">
+                        <div class="style-option active" onclick="changeStyle('Caveat', this)">
+                            <div style="font-family: 'Caveat', cursive; font-size: 1.2rem;">Caveat</div>
+                            <div style="font-size: 0.75rem; margin-top: 0.3rem;">Casual</div>
+                        </div>
+                        <div class="style-option" onclick="changeStyle('Kalam', this)">
+                            <div style="font-family: 'Kalam', cursive; font-size: 1.2rem;">Kalam</div>
+                            <div style="font-size: 0.75rem; margin-top: 0.3rem;">Bold</div>
+                        </div>
+                        <div class="style-option" onclick="changeStyle('Patrick Hand', this)">
+                            <div style="font-family: 'Patrick Hand', cursive; font-size: 1.2rem;">Patrick</div>
+                            <div style="font-size: 0.75rem; margin-top: 0.3rem;">Clean</div>
+                        </div>
+                        <div class="style-option" onclick="changeStyle('Indie Flower', this)">
+                            <div style="font-family: 'Indie Flower', cursive; font-size: 1.2rem;">Indie</div>
+                            <div style="font-size: 0.75rem; margin-top: 0.3rem;">Playful</div>
+                        </div>
+                        <div class="style-option" onclick="changeStyle('Dancing Script', this)">
+                            <div style="font-family: 'Dancing Script', cursive; font-size: 1.2rem;">Dancing</div>
+                            <div style="font-size: 0.75rem; margin-top: 0.3rem;">Elegant</div>
+                        </div>
+                        <div class="style-option" onclick="changeStyle('Shadows Into Light', this)">
+                            <div style="font-family: 'Shadows Into Light', cursive; font-size: 1.2rem;">Shadows</div>
+                            <div style="font-size: 0.75rem; margin-top: 0.3rem;">Light</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
                     <label>Font Size: <span id="fontValue">20</span>px</label>
                     <input type="range" id="fontSize" min="12" max="36" value="20" oninput="updateFontSize(this.value)">
                 </div>
@@ -934,19 +1003,22 @@
                     <input type="range" id="lineSpacing" min="1" max="3" step="0.1" value="1.8" oninput="updateLineSpacing(this.value)">
                 </div>
                 <div class="control-group">
-                    <label>Handwriting Style:</label>
-                    <select id="fontStyle" onchange="updateFontStyle(this.value)" style="width: 100%; padding: 0.8rem; border-radius: 12px; border: 2px solid #e0e0e0; font-family: 'League Spartan', sans-serif; font-weight: 600;">
-                        <option value="Caveat">Caveat (Casual)</option>
-                        <option value="Kalam">Kalam (Bold)</option>
-                        <option value="Patrick Hand">Patrick Hand</option>
-                        <option value="Indie Flower">Indie Flower</option>
-                        <option value="Dancing Script">Dancing Script</option>
-                        <option value="Shadows Into Light">Shadows Into Light</option>
-                        <option value="Architects Daughter">Architects Daughter</option>
-                        <option value="Permanent Marker">Permanent Marker</option>
-                        <option value="Gochi Hand">Gochi Hand</option>
-                        <option value="Covered By Your Grace">Covered By Your Grace</option>
-                    </select>
+                    <label>Handwriting Variation: <span id="imperfectionValue">50</span>%</label>
+                    <input type="range" id="imperfection" min="0" max="100" value="50" oninput="updateImperfection(this.value)">
+                </div>
+            </div>
+
+            <!-- Layout Options -->
+            <div class="control-section">
+                <h3>📐 Layout Options</h3>
+                <div class="control-group">
+                    <label>
+                        <input type="checkbox" id="compactMode" onchange="toggleCompactMode(this.checked)" style="margin-right: 0.5rem;">
+                        <strong>Compact Mode (2 Columns)</strong>
+                    </label>
+                    <div style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">
+                        💡 Fit more content on each page
+                    </div>
                 </div>
             </div>
 
@@ -978,6 +1050,7 @@
             <div style="position: relative;">
                 <div class="preview-wrapper">
                     <div id="paperPreview"></div>
+                    <div class="page-break-line" id="pageBreakLine" style="top: 1040px;"></div>
                     <canvas id="drawingCanvas"></canvas>
                 </div>
             </div>
@@ -997,7 +1070,7 @@
         let isDrawing = false;
         let lastX = 0;
         let lastY = 0;
-        let currentTool = 'pen';
+        let currentTool = null; // Start with no tool selected
         let brushSize = 3;
         let canvas, ctx;
 
@@ -1012,6 +1085,11 @@
         function initCanvas() {
             canvas = document.getElementById('drawingCanvas');
             ctx = canvas.getContext('2d');
+            
+            // Start with drawing disabled
+            canvas.style.pointerEvents = 'none';
+            canvas.style.cursor = 'default';
+            
             resizeCanvas();
             
             canvas.addEventListener('mousedown', startDrawing);
@@ -1048,6 +1126,8 @@
         }
 
         function startDrawing(e) {
+            if (!currentTool) return; // Don't draw if no tool selected
+            
             isDrawing = true;
             const rect = canvas.getBoundingClientRect();
             lastX = e.clientX - rect.left;
@@ -1055,7 +1135,7 @@
         }
 
         function draw(e) {
-            if (!isDrawing) return;
+            if (!isDrawing || !currentTool) return; // Don't draw if no tool selected
             
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -1087,9 +1167,26 @@
         }
 
         function selectTool(tool) {
+            const clickedBtn = event.target;
+            
+            // If clicking the same tool again, deselect it
+            if (clickedBtn.classList.contains('active') && tool !== 'clear') {
+                document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+                currentTool = null;
+                canvas.style.pointerEvents = 'none';
+                canvas.style.cursor = 'default';
+                return;
+            }
+            
+            // Select the new tool
             currentTool = tool;
             document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            if (tool !== 'clear') {
+                clickedBtn.classList.add('active');
+                canvas.style.pointerEvents = 'auto';
+                canvas.style.cursor = 'crosshair';
+            }
         }
 
         function updateBrushSize(value) {
@@ -1190,9 +1287,33 @@
             updatePreview();
         }
 
-        function updateFontStyle(font) {
+        function changeStyle(font, element) {
             currentFont = font;
+            if (element) {
+                document.querySelectorAll('.style-option').forEach(opt => opt.classList.remove('active'));
+                element.classList.add('active');
+            }
             updatePreview();
+        }
+        
+        function toggleCompactMode(enabled) {
+            const preview = document.getElementById('paperPreview');
+            if (enabled) {
+                preview.classList.add('compact-mode');
+            } else {
+                preview.classList.remove('compact-mode');
+            }
+        }
+        
+        function updateImperfection(value) {
+            document.getElementById('imperfectionValue').textContent = value;
+            // Add slight random rotation/positioning to text for handwritten feel
+            const preview = document.getElementById('paperPreview');
+            if (value > 30) {
+                preview.style.transform = `rotate(${(value - 50) * 0.01}deg)`;
+            } else {
+                preview.style.transform = 'rotate(0deg)';
+            }
         }
 
         // Update preview
@@ -1268,69 +1389,91 @@
             
             try {
                 const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
                 const preview = document.getElementById('paperPreview');
                 const canvasEl = document.getElementById('drawingCanvas');
                 
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
+                // A4 dimensions in mm at 72 DPI
+                const a4Width = 210;
+                const a4Height = 297;
                 
+                // Create PDF in portrait A4
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                // High quality capture
                 const scale = 3;
-                const canvas = await html2canvas(preview, {
+                const htmlCanvas = await html2canvas(preview, {
                     scale: scale,
                     backgroundColor: currentPaperColor,
                     logging: false,
-                    useCORS: true
+                    useCORS: true,
+                    windowWidth: preview.scrollWidth,
+                    windowHeight: preview.scrollHeight
                 });
 
+                // Create temp canvas to combine content and drawings
                 const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = canvas.width;
-                tempCanvas.height = canvas.height;
+                tempCanvas.width = htmlCanvas.width;
+                tempCanvas.height = htmlCanvas.height;
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                tempCtx.drawImage(canvas, 0, 0);
+                // Draw the HTML content
+                tempCtx.drawImage(htmlCanvas, 0, 0);
                 
+                // Draw the canvas overlay (drawings)
                 if (canvasEl.width > 0 && canvasEl.height > 0) {
                     tempCtx.drawImage(canvasEl, 0, 0, tempCanvas.width, tempCanvas.height);
                 }
 
-                const aspectRatio = tempCanvas.width / tempCanvas.height;
-                const finalWidth = pdfWidth;
-                const finalHeight = finalWidth / aspectRatio;
+                // Calculate dimensions maintaining aspect ratio
+                const imgAspectRatio = tempCanvas.width / tempCanvas.height;
+                const a4AspectRatio = a4Width / a4Height;
                 
-                if (finalHeight <= pdfHeight) {
-                    const imgData = tempCanvas.toDataURL('image/jpeg', 1.0);
-                    pdf.addImage(imgData, 'JPEG', 0, 0, finalWidth, finalHeight);
-                } else {
-                    const pagesNeeded = Math.ceil(finalHeight / pdfHeight);
-                    const pageHeightInCanvas = tempCanvas.height / pagesNeeded;
+                let imgWidth = a4Width;
+                let imgHeight = a4Width / imgAspectRatio;
+                
+                // If image is taller than A4, split into pages
+                const pageHeight = a4Height;
+                const pageHeightPx = (tempCanvas.height / imgHeight) * pageHeight;
+                const totalPages = Math.ceil(tempCanvas.height / pageHeightPx);
+                
+                for (let page = 0; page < totalPages; page++) {
+                    if (page > 0) {
+                        pdf.addPage();
+                    }
                     
-                    for (let i = 0; i < pagesNeeded; i++) {
-                        const pageCanvas = document.createElement('canvas');
-                        pageCanvas.width = tempCanvas.width;
-                        pageCanvas.height = pageHeightInCanvas;
-                        const pageCtx = pageCanvas.getContext('2d');
-                        
-                        pageCtx.fillStyle = currentPaperColor;
-                        pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
-                        
-                        pageCtx.drawImage(
-                            tempCanvas,
-                            0, i * pageHeightInCanvas,
-                            tempCanvas.width, pageHeightInCanvas,
-                            0, 0,
-                            pageCanvas.width, pageCanvas.height
-                        );
-                        
-                        const pageImgData = pageCanvas.toDataURL('image/jpeg', 1.0);
-                        
-                        if (i > 0) pdf.addPage();
-                        
-                        pdf.addImage(pageImgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                        
+                    // Create a canvas for this page
+                    const pageCanvas = document.createElement('canvas');
+                    pageCanvas.width = tempCanvas.width;
+                    pageCanvas.height = Math.min(pageHeightPx, tempCanvas.height - (page * pageHeightPx));
+                    const pageCtx = pageCanvas.getContext('2d');
+                    
+                    // Fill background
+                    pageCtx.fillStyle = currentPaperColor;
+                    pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+                    
+                    // Draw the slice of content for this page
+                    pageCtx.drawImage(
+                        tempCanvas,
+                        0, page * pageHeightPx, // Source x, y
+                        tempCanvas.width, pageCanvas.height, // Source width, height
+                        0, 0, // Dest x, y
+                        pageCanvas.width, pageCanvas.height // Dest width, height
+                    );
+                    
+                    // Convert to image
+                    const pageImgData = pageCanvas.toDataURL('image/jpeg', 1.0);
+                    
+                    // Calculate height for this page (in case it's the last page and shorter)
+                    const thisPageHeight = (pageCanvas.height / tempCanvas.height) * imgHeight;
+                    
+                    // Add to PDF without stretching
+                    pdf.addImage(pageImgData, 'JPEG', 0, 0, imgWidth, thisPageHeight);
+                    
+                    // Add page number
+                    if (totalPages > 1) {
                         pdf.setFontSize(10);
                         pdf.setTextColor(150);
-                        pdf.text(`Page ${i + 1} of ${pagesNeeded}`, pdfWidth / 2, pdfHeight - 5, { align: 'center' });
+                        pdf.text(`Page ${page + 1} of ${totalPages}`, a4Width / 2, a4Height - 5, { align: 'center' });
                     }
                 }
                 
