@@ -470,6 +470,43 @@
             background: #4ecdc4;
             color: white;
         }
+        
+        /* Quick Insert Buttons */
+        .quick-insert-btn {
+            padding: 0.6rem 0.8rem;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            font-family: 'League Spartan', sans-serif;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .quick-insert-btn:hover {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        body.dark-mode .quick-insert-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: var(--light);
+        }
+        
+        body.dark-mode .quick-insert-btn:hover {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border-color: transparent;
+        }
 
         /* Sliders */
         input[type="range"] {
@@ -883,6 +920,67 @@
             <div class="control-section">
                 <h3>📝 Your Notes</h3>
                 <textarea id="notesInput" placeholder="Start typing your notes here..." oninput="updatePreview()"></textarea>
+                
+                <!-- Quick Insert Buttons -->
+                <div style="margin-top: 1rem;">
+                    <label style="font-weight: 700; margin-bottom: 0.5rem; display: block;">⚡ Quick Insert:</label>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+                        <button class="quick-insert-btn" onclick="insertCode('[IMP]\n\n[/IMP]')" title="Important Box">
+                            ⚠️ Important
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('[STAR]\n\n[/STAR]')" title="Star Box">
+                            ⭐ Star
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('[BOX]\n\n[/BOX]')" title="Dashed Box">
+                            📦 Box
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('[FORMULA]\n\n[/FORMULA]')" title="Formula Box">
+                            🔢 Formula
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('[NOTE]\n\n[/NOTE]')" title="Note">
+                            💡 Note
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('[TIP]\n\n[/TIP]')" title="Tip">
+                            💡 Tip
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('[HIGHLIGHT color=&quot;yellow&quot;][/HIGHLIGHT]')" title="Yellow Highlight">
+                            🖍️ Yellow
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('[HIGHLIGHT color=&quot;pink&quot;][/HIGHLIGHT]')" title="Pink Highlight">
+                            🖍️ Pink
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('[HIGHLIGHT color=&quot;green&quot;][/HIGHLIGHT]')" title="Green Highlight">
+                            🖍️ Green
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('# ')" title="Big Header">
+                            H1 Header
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('## ')" title="Medium Header">
+                            H2 Header
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('**Bold**')" title="Bold Text">
+                            <strong>B</strong> Bold
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('- ')" title="Bullet Point">
+                            ▪️ Bullet
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('> ')" title="Arrow Point">
+                            ➤ Arrow
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('+ ')" title="Check Point">
+                            ✅ Check
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('---\n')" title="Horizontal Line">
+                            ━━ Line
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('==Highlighted==')" title="Mark Text">
+                            ✨ Mark
+                        </button>
+                        <button class="quick-insert-btn" onclick="insertCode('* ')" title="Star Bullet">
+                            ⭐ Star •
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Color Theme -->
@@ -1370,6 +1468,61 @@
             } else {
                 preview.style.transform = 'rotate(0deg)';
             }
+        }
+        
+        // Quick Insert Function
+        function insertCode(code) {
+            const textarea = document.getElementById('notesInput');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const selectedText = text.substring(start, end);
+            
+            // For codes that wrap text (like [HIGHLIGHT], **Bold**, etc.)
+            if (code.includes('[/') || code.includes('**') || code.includes('==')) {
+                // If text is selected, wrap it
+                if (selectedText) {
+                    let newCode = code;
+                    if (code.includes('[HIGHLIGHT')) {
+                        newCode = code.replace('[/HIGHLIGHT]', selectedText + '[/HIGHLIGHT]');
+                    } else if (code.includes('**')) {
+                        newCode = '**' + selectedText + '**';
+                    } else if (code.includes('==')) {
+                        newCode = '==' + selectedText + '==';
+                    } else {
+                        // For boxes like [IMP], [BOX], etc.
+                        newCode = code.replace('\n\n', '\n' + selectedText + '\n');
+                    }
+                    textarea.value = text.substring(0, start) + newCode + text.substring(end);
+                    // Move cursor to end of inserted code
+                    textarea.selectionStart = textarea.selectionEnd = start + newCode.length;
+                } else {
+                    // No selection, insert code and position cursor inside
+                    textarea.value = text.substring(0, start) + code + text.substring(end);
+                    
+                    // Position cursor in the middle of the code
+                    if (code.includes('[HIGHLIGHT')) {
+                        textarea.selectionStart = textarea.selectionEnd = start + code.indexOf('[/HIGHLIGHT]');
+                    } else if (code.includes('**')) {
+                        textarea.selectionStart = textarea.selectionEnd = start + 2;
+                    } else if (code.includes('==')) {
+                        textarea.selectionStart = textarea.selectionEnd = start + 2;
+                    } else if (code.includes('\n\n')) {
+                        // For boxes, position cursor between the tags
+                        textarea.selectionStart = textarea.selectionEnd = start + code.indexOf('\n\n') + 1;
+                    } else {
+                        textarea.selectionStart = textarea.selectionEnd = start + code.length;
+                    }
+                }
+            } else {
+                // For codes that just insert at cursor (like headers, bullets)
+                textarea.value = text.substring(0, start) + code + text.substring(end);
+                textarea.selectionStart = textarea.selectionEnd = start + code.length;
+            }
+            
+            // Update preview and focus back on textarea
+            textarea.focus();
+            updatePreview();
         }
 
         // Update preview
