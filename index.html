@@ -3,27 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NoteCraft - Transform Your Notes into Beautiful Handwriting</title>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Indie+Flower&family=Dancing+Script:wght@400;700&family=Space+Mono:wght@400;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>NoteCraft Pro - Smart & Colorful Note Taking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Indie+Flower&family=Dancing+Script:wght@400;700&family=Shadows+Into+Light&family=Architects+Daughter&family=Permanent+Marker&family=Gochi+Hand&family=Covered+By+Your+Grace&family=Rock+Salt&family=League+Spartan:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c;
-            --accent: #3498db;
-            --bg-light: #f8f9fa;
-            --bg-dark: #1a1a2e;
-            --text-light: #2c3e50;
-            --text-dark: #ecf0f1;
-            --border: #ddd;
-            --shadow: rgba(0, 0, 0, 0.1);
+            /* Theme colors */
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffe66d;
+            --dark: #2d3436;
+            --light: #f8f9fa;
+            
+            /* Ink colors */
+            --ink-black: #000000;
+            --ink-blue: #0066cc;
+            --ink-red: #ff0000;
+            --ink-green: #00aa00;
+            --ink-purple: #9b59b6;
+            --ink-pink: #ff69b4;
+            --ink-orange: #ff8c00;
+            --ink-brown: #8b4513;
+            
+            /* Highlight colors */
+            --highlight-yellow: rgba(255, 235, 59, 0.4);
+            --highlight-pink: rgba(255, 105, 180, 0.3);
+            --highlight-green: rgba(76, 175, 80, 0.3);
+            --highlight-blue: rgba(33, 150, 243, 0.3);
+            --highlight-orange: rgba(255, 152, 0, 0.3);
+            --highlight-purple: rgba(156, 39, 176, 0.3);
             
             /* Paper colors */
             --paper-white: #ffffff;
             --paper-cream: #fef9e7;
             --paper-yellow: #fffacd;
             --paper-blue: #e8f4f8;
+            --paper-pink: #ffe4e9;
+            --paper-mint: #e8f8f5;
+            --paper-lavender: #f3e5f5;
+            --paper-peach: #fff3e0;
+            --paper-recycled: #f5f5dc;
+            --paper-vintage: #faebd7;
         }
 
         * {
@@ -33,36 +54,67 @@
         }
 
         body {
-            font-family: 'Manrope', sans-serif;
+            font-family: 'League Spartan', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: var(--text-light);
+            color: var(--dark);
             overflow-x: hidden;
         }
 
         body.dark-mode {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: var(--text-dark);
+            color: var(--light);
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 20s infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-100px) translateX(50px); }
+            50% { transform: translateY(-50px) translateX(100px); }
+            75% { transform: translateY(-150px) translateX(-50px); }
         }
 
         /* Header */
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem 2rem;
-            box-shadow: 0 4px 20px var(--shadow);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 1.2rem 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 3px solid var(--secondary);
+            border-bottom: 4px solid;
+            border-image: linear-gradient(90deg, #ff6b6b, #4ecdc4, #ffe66d) 1;
         }
 
         body.dark-mode .header {
-            background: rgba(26, 26, 46, 0.95);
-            border-bottom: 3px solid var(--accent);
+            background: rgba(26, 26, 46, 0.98);
+            border-image: linear-gradient(90deg, #ff6b6b, #4ecdc4, #ffe66d) 1;
+        }
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
@@ -72,22 +124,23 @@
         }
 
         .logo-icon {
-            font-size: 2rem;
-            animation: float 3s ease-in-out infinite;
+            font-size: 2.5rem;
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #ffe66d);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -1px;
         }
 
         .header-actions {
@@ -96,33 +149,41 @@
             align-items: center;
         }
 
-        .theme-toggle {
-            background: var(--accent);
+        .theme-toggle, .preset-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border: none;
             color: white;
-            padding: 0.7rem 1.2rem;
+            padding: 0.7rem 1.5rem;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            font-weight: 700;
             transition: all 0.3s ease;
-            font-family: 'Manrope', sans-serif;
-            font-weight: 600;
+            font-family: 'League Spartan', sans-serif;
+            letter-spacing: 0.5px;
         }
 
-        .theme-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        .preset-btn {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+        }
+
+        .theme-toggle:hover, .preset-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
         /* Main Container */
         .container {
-            max-width: 1600px;
+            max-width: 1800px;
             margin: 2rem auto;
             padding: 0 2rem;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 400px 1fr;
             gap: 2rem;
+            position: relative;
+            z-index: 1;
             animation: slideUp 0.6s ease-out;
+            align-items: start;
         }
 
         @keyframes slideUp {
@@ -138,16 +199,18 @@
 
         /* Control Panel */
         .control-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
             padding: 2rem;
-            box-shadow: 0 10px 40px var(--shadow);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             height: fit-content;
+            border: 2px solid rgba(255, 255, 255, 0.5);
         }
 
         body.dark-mode .control-panel {
-            background: rgba(26, 26, 46, 0.95);
+            background: rgba(26, 26, 46, 0.98);
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         .control-section {
@@ -155,16 +218,14 @@
         }
 
         .control-section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: var(--secondary);
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            color: #ff6b6b;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        body.dark-mode .control-section h3 {
-            color: var(--accent);
+            gap: 0.7rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .control-group {
@@ -173,152 +234,241 @@
 
         .control-group label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            font-size: 0.9rem;
+            margin-bottom: 0.6rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
         }
 
         textarea {
             width: 100%;
-            min-height: 300px;
-            padding: 1rem;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-family: 'Manrope', sans-serif;
+            min-height: 250px;
+            padding: 1.2rem;
+            border: 3px solid #e0e0e0;
+            border-radius: 16px;
+            font-family: 'League Spartan', sans-serif;
             font-size: 1rem;
             resize: vertical;
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.5);
         }
 
         textarea:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.1);
         }
 
         body.dark-mode textarea {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-dark);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: var(--light);
         }
 
-        /* Style Options */
-        .style-grid {
+        /* Color Theme Selector */
+        .theme-selector {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            gap: 0.8rem;
         }
 
-        .style-option {
+        .theme-card {
             padding: 1rem;
-            border: 2px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
+            border: 3px solid transparent;
             text-align: center;
-            background: white;
-        }
-
-        body.dark-mode .style-option {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .style-option:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px var(--shadow);
-        }
-
-        .style-option.active {
-            border-color: var(--accent);
-            background: rgba(52, 152, 219, 0.1);
-        }
-
-        .style-option .preview {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .style-option .name {
+            font-weight: 700;
             font-size: 0.85rem;
-            font-weight: 600;
         }
 
-        /* Color Picker */
-        .color-options {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+        .theme-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
-        .color-btn {
+        .theme-card.active {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+        }
+
+        .theme-card.study { background: linear-gradient(135deg, #a8e6cf, #dcedc1); }
+        .theme-card.creative { background: linear-gradient(135deg, #ff6b6b, #feca57); }
+        .theme-card.professional { background: linear-gradient(135deg, #95a5a6, #34495e); color: white; }
+        .theme-card.neon { background: linear-gradient(135deg, #ff0080, #7928ca); color: white; }
+        .theme-card.pastel { background: linear-gradient(135deg, #ffd3e1, #c9e4ff); }
+        .theme-card.sunset { background: linear-gradient(135deg, #ff7e5f, #feb47b); }
+
+        /* Ink Color Picker */
+        .color-picker {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+        }
+
+        .color-option {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            border: 3px solid transparent;
             cursor: pointer;
+            border: 4px solid transparent;
             transition: all 0.3s ease;
             position: relative;
         }
 
-        .color-btn:hover {
-            transform: scale(1.1);
+        .color-option:hover {
+            transform: scale(1.15);
         }
 
-        .color-btn.active {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        .color-option.active {
+            border-color: white;
+            box-shadow: 0 0 0 3px #4ecdc4;
         }
 
-        .color-btn::after {
-            content: '';
+        .color-option::after {
+            content: '✓';
             position: absolute;
-            inset: -8px;
-            border: 2px solid transparent;
-            border-radius: 50%;
-            transition: all 0.3s ease;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.2s;
         }
 
-        .color-btn.active::after {
-            border-color: var(--accent);
+        .color-option.active::after {
+            opacity: 1;
         }
 
-        /* Paper Type */
-        .paper-options {
+        /* Paper Background Selector */
+        .paper-selector {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
         }
 
         .paper-option {
-            padding: 1rem;
-            border: 2px solid var(--border);
-            border-radius: 10px;
+            height: 60px;
+            border-radius: 12px;
             cursor: pointer;
+            border: 3px solid transparent;
             transition: all 0.3s ease;
-            text-align: center;
-            background: white;
-            min-height: 80px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        body.dark-mode .paper-option {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
         .paper-option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px var(--shadow);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         .paper-option.active {
-            border-color: var(--accent);
-            background: rgba(52, 152, 219, 0.1);
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.2);
+        }
+
+        .paper-option.lined::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 18px,
+                rgba(0, 0, 0, 0.1) 18px,
+                rgba(0, 0, 0, 0.1) 19px
+            );
+        }
+
+        .paper-option.graph::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0px, transparent 1px, transparent 15px),
+                repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0px, transparent 1px, transparent 15px);
+        }
+
+        .paper-option.dots::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.15) 1px, transparent 1px);
+            background-size: 15px 15px;
+        }
+
+        /* Highlighter Tools */
+        .highlighter-tools {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+        }
+
+        .highlighter-btn {
+            padding: 0.8rem;
+            border-radius: 12px;
+            border: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .highlighter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .highlighter-btn.active {
+            border-color: white;
+            box-shadow: 0 0 0 3px #4ecdc4;
+        }
+
+        /* Drawing Tools */
+        .drawing-tools {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            font-family: 'League Spartan', sans-serif;
+        }
+
+        .tool-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .tool-btn.active {
+            background: #4ecdc4;
+            color: white;
+            border-color: #4ecdc4;
+        }
+
+        body.dark-mode .tool-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: var(--light);
+        }
+
+        body.dark-mode .tool-btn.active {
+            background: #4ecdc4;
+            color: white;
         }
 
         /* Sliders */
@@ -326,633 +476,353 @@
             width: 100%;
             height: 8px;
             border-radius: 5px;
-            background: linear-gradient(to right, var(--accent), var(--secondary));
+            background: linear-gradient(90deg, #4ecdc4, #ffe66d);
             outline: none;
-            --webkit-appearance: none;
+            -webkit-appearance: none;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            background: white;
-            border: 3px solid var(--accent);
+            background: #ff6b6b;
             cursor: pointer;
-            box-shadow: 0 2px 5px var(--shadow);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
         }
 
         input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            background: white;
-            border: 3px solid var(--accent);
+            background: #ff6b6b;
             cursor: pointer;
-            box-shadow: 0 2px 5px var(--shadow);
+            border: none;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
         }
 
-        .slider-value {
-            display: inline-block;
-            background: var(--accent);
+        /* Buttons */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'League Spartan', sans-serif;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
             color: white;
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
         }
 
-        /* Checkbox */
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
         }
 
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
+        .btn-secondary {
+            background: linear-gradient(135deg, #4ecdc4, #ffe66d);
+            color: var(--dark);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
         }
 
-        /* Preview Panel */
-        .preview-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(78, 205, 196, 0.4);
+        }
+
+        .export-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Preview Area */
+        .preview-area {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
             padding: 2rem;
-            box-shadow: 0 10px 40px var(--shadow);
-            position: sticky;
-            top: 100px;
-            max-height: calc(100vh - 120px);
-            overflow: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            overflow-x: auto;
+            overflow-y: visible;
+        }
+        
+        /* Custom scrollbar for preview area */
+        .preview-area::-webkit-scrollbar {
+            height: 12px;
+        }
+        
+        .preview-area::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        
+        .preview-area::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            border-radius: 10px;
+        }
+        
+        .preview-area::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(90deg, #4ecdc4, #ffe66d);
         }
 
-        body.dark-mode .preview-panel {
-            background: rgba(26, 26, 46, 0.95);
+        body.dark-mode .preview-area {
+            background: rgba(26, 26, 46, 0.98);
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         .preview-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
+            border-bottom: 3px solid;
+            border-image: linear-gradient(90deg, #ff6b6b, #4ecdc4, #ffe66d) 1;
+            min-width: 800px;
         }
 
-        .preview-header h3 {
-            font-size: 1.3rem;
-            color: var(--secondary);
+        .preview-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        body.dark-mode .preview-header h3 {
-            color: var(--accent);
-        }
-
-        .preview-actions {
+        .preview-stats {
             display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
             gap: 0.5rem;
         }
 
-        .icon-btn {
-            background: var(--accent);
-            border: none;
-            color: white;
-            padding: 0.6rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .icon-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-        }
-
-        /* Paper Preview */
-        .paper-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px var(--shadow);
+        .preview-wrapper {
             position: relative;
-            overflow: hidden;
+            width: 800px;
+            min-height: 1100px;
         }
 
         #paperPreview {
-            width: 100%;
-            padding: 3rem;
-            min-height: 400px;
-            position: relative;
             background: var(--paper-white);
-            background-size: 100% 30px;
-            font-size: 20px;
-            line-height: 1.8;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            width: 800px;
+            min-height: 1100px;
+            padding: 60px 80px;
+            border-radius: 0;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: visible;
         }
 
-        /* Column layouts */
-        #paperPreview.layout-double {
-            column-count: 2;
-            column-gap: 2rem;
-            column-rule: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        #paperPreview.layout-triple {
-            column-count: 3;
-            column-gap: 1.5rem;
-            column-rule: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        /* Main headings span across all columns */
-        #paperPreview h1 {
-            column-span: all;
-            -webkit-column-span: all;
-            text-align: left;
-            border-bottom: 3px solid currentColor;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem !important;
-            page-break-after: avoid;
-            break-after: avoid;
-        }
-
-        /* Section headings also span columns */
-        #paperPreview h2 {
-            column-span: all;
-            -webkit-column-span: all;
-            text-align: left;
-            border-bottom: 2px dashed currentColor;
-            padding-bottom: 0.3rem;
-            margin-top: 1.5rem;
-            margin-bottom: 1rem !important;
-            page-break-after: avoid;
-            break-after: avoid;
-        }
-
-        /* Compact mode */
-        #paperPreview.compact-mode {
-            padding: 2rem;
-        }
-
-        #paperPreview.compact-mode h1,
-        #paperPreview.compact-mode h2,
-        #paperPreview.compact-mode h3 {
-            margin: 0.5rem 0 0.3rem 0;
-        }
-
-        #paperPreview.compact-mode ul,
-        #paperPreview.compact-mode ol {
-            margin-bottom: 0.5rem;
-        }
-
-        #paperPreview.compact-mode li {
-            margin-bottom: 0.2rem;
-        }
-
-        /* Prevent column breaks in important elements */
-        .layout-double h3, .layout-triple h3 {
-            break-after: avoid;
-            page-break-after: avoid;
-        }
-
-        .layout-double ul, .layout-double ol,
-        .layout-triple ul, .layout-triple ol {
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
-
-        /* Box styling for important content */
-        .handwritten-text .box {
-            border: 2px solid currentColor;
-            padding: 0.8rem;
-            margin: 1rem 0;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.3);
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
-
-        .handwritten-text .important-box {
-            border: 3px double currentColor;
-            padding: 1rem;
-            margin: 1rem 0;
-            background: rgba(255, 235, 59, 0.15);
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
-
-        .handwritten-text .formula-box {
-            background: rgba(52, 152, 219, 0.05);
-            border-left: 4px solid currentColor;
-            padding: 0.8rem;
-            margin: 0.8rem 0;
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
-
-        /* Decorative underlines */
-        .handwritten-text .underline {
-            text-decoration: underline;
-            text-decoration-style: wavy;
-            text-decoration-color: currentColor;
-        }
-
-        .handwritten-text .double-underline {
-            border-bottom: 3px double currentColor;
-            display: inline-block;
-            padding-bottom: 2px;
-        }
-
-        /* Star/Important markers */
-        .handwritten-text .star::before {
-            content: '⭐ ';
-        }
-
-        .handwritten-text .important::before {
-            content: '❗ ';
-        }
-
-        .handwritten-text .note::before {
-            content: '📌 ';
-        }
-
-        .handwritten-text .tip::before {
-            content: '💡 ';
-        }
-
-        /* Margin notes */
-        .handwritten-text .margin-note {
-            float: right;
-            width: 30%;
-            padding: 0.5rem;
-            margin: 0 0 1rem 1rem;
-            background: rgba(255, 235, 59, 0.2);
-            border-left: 3px solid currentColor;
-            font-size: 0.85em;
-            break-inside: avoid;
-        }
-
-        /* Arrows and connectors */
-        .handwritten-text .arrow-right::after {
-            content: ' →';
-        }
-
-        .handwritten-text .arrow-left::before {
-            content: '← ';
-        }
-
-        .handwritten-text .arrow-both::before {
-            content: '↔ ';
-        }
-
-        /* Different bullet styles */
-        .handwritten-text ul.dash-bullets li::marker {
-            content: '– ';
-        }
-
-        .handwritten-text ul.arrow-bullets li::marker {
-            content: '➤ ';
-        }
-
-        .handwritten-text ul.star-bullets li::marker {
-            content: '★ ';
-        }
-
-        .handwritten-text ul.check-bullets li::marker {
-            content: '✓ ';
-        }
-
-        /* Circle important text */
-        .handwritten-text .circled {
-            border: 2px solid currentColor;
-            border-radius: 50%;
-            padding: 0.2rem 0.6rem;
-            display: inline-block;
-        }
-
-        /* Date/Header stamp */
-        .handwritten-text .date-stamp {
-            text-align: right;
-            font-size: 0.9em;
-            opacity: 0.7;
-            margin-bottom: 1rem;
-        }
-
-        /* Page decoration */
-        .handwritten-text .divider {
-            text-align: center;
-            margin: 1.5rem 0;
-            font-size: 1.2em;
-        }
-
-        .handwritten-text .divider::before,
-        .handwritten-text .divider::after {
-            content: '───';
-            margin: 0 1rem;
-        }
-
-        /* Paper backgrounds */
-        .paper-ruled {
+        #paperPreview.lined {
             background-image: repeating-linear-gradient(
                 transparent,
-                transparent 29px,
-                #e0e0e0 29px,
-                #e0e0e0 30px
+                transparent 39px,
+                rgba(0, 0, 0, 0.08) 39px,
+                rgba(0, 0, 0, 0.08) 40px
             );
         }
 
-        .paper-dotted {
-            background-image: radial-gradient(circle, #d0d0d0 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-
-        .paper-grid {
+        #paperPreview.graph {
             background-image: 
-                repeating-linear-gradient(0deg, #e0e0e0 0px, #e0e0e0 1px, transparent 1px, transparent 20px),
-                repeating-linear-gradient(90deg, #e0e0e0 0px, #e0e0e0 1px, transparent 1px, transparent 20px);
-            background-size: 20px 20px;
+                repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0px, transparent 1px, transparent 30px),
+                repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0px, transparent 1px, transparent 30px);
         }
 
-        /* Canvas for drawing */
+        #paperPreview.dots {
+            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1) 1.5px, transparent 1.5px);
+            background-size: 30px 30px;
+        }
+
+        /* Canvas Overlay */
         #drawingCanvas {
             position: absolute;
             top: 0;
             left: 0;
+            cursor: crosshair;
+            z-index: 10;
+            pointer-events: auto;
+        }
+        
+        .preview-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 600px;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            cursor: crosshair;
-            pointer-events: none;
-        }
-
-        #drawingCanvas.drawing-enabled {
-            pointer-events: all;
-        }
-
-        /* Drawing tools */
-        .drawing-tools {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: rgba(52, 152, 219, 0.1);
-            border-radius: 10px;
-        }
-
-        .tool-btn {
-            padding: 0.6rem 1rem;
-            border: 2px solid var(--border);
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        body.dark-mode .tool-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-dark);
-        }
-
-        .tool-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px var(--shadow);
-        }
-
-        .tool-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        /* Export Buttons */
-        .export-section {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .export-btn {
-            padding: 1rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-family: 'Manrope', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .export-btn.pdf {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-        }
-
-        .export-btn.png {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-        }
-
-        .export-btn.jpg {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            color: white;
-        }
-
-        .export-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px var(--shadow);
-        }
-
-        /* Handwriting Styles */
-        .font-caveat { font-family: 'Caveat', cursive; }
-        .font-kalam { font-family: 'Kalam', cursive; }
-        .font-patrick { font-family: 'Patrick Hand', cursive; }
-        .font-indie { font-family: 'Indie Flower', cursive; }
-        .font-dancing { font-family: 'Dancing Script', cursive; }
-
-        /* Text formatting */
-        .handwritten-text h1,
-        .handwritten-text h2,
-        .handwritten-text h3 {
-            font-weight: 700;
-            margin: 1rem 0 0.5rem 0;
-        }
-
-        .handwritten-text h1 { font-size: 2em; }
-        .handwritten-text h2 { font-size: 1.7em; }
-        .handwritten-text h3 { font-size: 1.4em; }
-
-        .handwritten-text ul,
-        .handwritten-text ol {
-            margin-left: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .handwritten-text li {
-            margin-bottom: 0.5rem;
-        }
-
-        .handwritten-text strong {
-            font-weight: 700;
-        }
-
-        .handwritten-text em {
-            font-style: italic;
-        }
-
-        .handwritten-text mark {
-            background: rgba(255, 235, 59, 0.4);
-            padding: 2px 4px;
-        }
-
-        /* Loading indicator */
-        .loading {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 2rem 3rem;
-            border-radius: 15px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
             display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
-        .loading.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
+        .loading-content {
+            text-align: center;
+            color: white;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            border-top: 8px solid #4ecdc4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 1rem;
         }
 
         /* Responsive */
         @media (max-width: 1200px) {
             .container {
-                grid-template-columns: 1fr;
-            }
-
-            .preview-panel {
-                position: relative;
-                top: 0;
-                max-height: none;
+                grid-template-columns: 350px 1fr;
             }
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .header {
-                padding: 1rem;
+            .header-content {
                 flex-direction: column;
                 gap: 1rem;
             }
 
-            .logo h1 {
-                font-size: 1.4rem;
+            .container {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
             }
 
-            .style-grid,
-            .paper-options {
+            .control-panel {
+                width: 100%;
+            }
+
+            .preview-area {
+                padding: 1rem;
+            }
+
+            .color-picker {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .theme-selector {
                 grid-template-columns: 1fr;
             }
-
-            .export-section {
-                grid-template-columns: 1fr;
+            
+            /* Keep preview area scrollable horizontally on mobile */
+            .preview-wrapper {
+                width: 800px;
             }
-
+            
             #paperPreview {
-                padding: 1.5rem;
-                font-size: 16px;
+                width: 800px;
             }
         }
 
-        /* Imperfection effects */
-        .imperfect-char {
-            display: inline-block;
+        /* Smart Auto-Formatting Styles */
+        .highlight-yellow { background: var(--highlight-yellow); }
+        .highlight-pink { background: var(--highlight-pink); }
+        .highlight-green { background: var(--highlight-green); }
+        .highlight-blue { background: var(--highlight-blue); }
+        .highlight-orange { background: var(--highlight-orange); }
+        .highlight-purple { background: var(--highlight-purple); }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #ffe66d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
         }
 
-        /* Templates Section */
-        .templates-section {
-            margin-top: 1rem;
+        .rainbow-underline {
+            border-bottom: 4px solid transparent;
+            border-image: linear-gradient(90deg, #ff6b6b, #4ecdc4, #ffe66d) 1;
+            padding-bottom: 2px;
         }
 
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.8rem;
-        }
-
-        .template-btn {
-            padding: 0.8rem;
-            border: 2px solid var(--border);
-            background: white;
+        /* Sticky Notes */
+        .sticky-note {
+            position: absolute;
+            padding: 1rem;
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-align: left;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-family: 'Caveat', cursive;
+            font-size: 1.1rem;
+            transform: rotate(-2deg);
+            z-index: 5;
+            cursor: move;
         }
 
-        body.dark-mode .template-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-dark);
-        }
-
-        .template-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px var(--shadow);
-            border-color: var(--accent);
-        }
-
-        .template-title {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
-            color: var(--accent);
-        }
-
-        .template-desc {
-            font-size: 0.75rem;
-            opacity: 0.7;
-        }
+        .sticky-yellow { background: #ffeb3b; }
+        .sticky-pink { background: #ff4081; color: white; }
+        .sticky-blue { background: #03a9f4; color: white; }
+        .sticky-green { background: #4caf50; color: white; }
     </style>
 </head>
 <body>
-    <!-- Loading Indicator -->
-    <div class="loading" id="loadingIndicator">Generating your handwritten notes...</div>
+    <!-- Background Particles -->
+    <div class="bg-particles" id="particles"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">Creating your masterpiece...</div>
+        </div>
+    </div>
 
     <!-- Header -->
     <header class="header">
-        <div class="logo">
-            <div class="logo-icon">✍️</div>
-            <h1>NoteCraft</h1>
-        </div>
-        <div class="header-actions">
-            <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">✨</div>
+                <h1>NoteCraft Pro</h1>
+            </div>
+            <div class="header-actions">
+                <button class="preset-btn" onclick="loadPreset()">📋 Load Preset</button>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            </div>
         </div>
     </header>
 
@@ -963,1007 +833,449 @@
             <!-- Input Section -->
             <div class="control-section">
                 <h3>📝 Your Notes</h3>
-                <div class="control-group">
-                    <textarea id="notesInput" placeholder="Paste or type your notes here...
-
-Try using:
-# Heading 1
-## Heading 2
-### Heading 3
-- Bullet point
-* Another bullet
-**Bold text**
-*Italic text*
-==Highlighted text==
-
-The app will automatically format these!" oninput="updatePreview()"></textarea>
-                </div>
+                <textarea id="notesInput" placeholder="Start typing your notes here..." oninput="updatePreview()"></textarea>
             </div>
 
-            <!-- Handwriting Style -->
+            <!-- Color Theme -->
             <div class="control-section">
-                <h3>✨ Handwriting Style</h3>
-                <div class="style-grid">
-                    <div class="style-option active" onclick="selectStyle('caveat')">
-                        <div class="preview font-caveat">Abc</div>
-                        <div class="name">Neat & Clean</div>
-                    </div>
-                    <div class="style-option" onclick="selectStyle('kalam')">
-                        <div class="preview font-kalam">Abc</div>
-                        <div class="name">School Style</div>
-                    </div>
-                    <div class="style-option" onclick="selectStyle('patrick')">
-                        <div class="preview font-patrick">Abc</div>
-                        <div class="name">Casual</div>
-                    </div>
-                    <div class="style-option" onclick="selectStyle('indie')">
-                        <div class="preview font-indie">Abc</div>
-                        <div class="name">Playful</div>
-                    </div>
-                    <div class="style-option" onclick="selectStyle('dancing')">
-                        <div class="preview font-dancing">Abc</div>
-                        <div class="name">Cursive</div>
-                    </div>
+                <h3>🎨 Color Theme</h3>
+                <div class="theme-selector">
+                    <div class="theme-card study" onclick="applyTheme('study')">Study Mode</div>
+                    <div class="theme-card creative" onclick="applyTheme('creative')">Creative</div>
+                    <div class="theme-card professional" onclick="applyTheme('professional')">Professional</div>
+                    <div class="theme-card neon" onclick="applyTheme('neon')">Neon Dark</div>
+                    <div class="theme-card pastel" onclick="applyTheme('pastel')">Pastel Dreams</div>
+                    <div class="theme-card sunset" onclick="applyTheme('sunset')">Sunset Vibes</div>
                 </div>
             </div>
 
             <!-- Ink Color -->
             <div class="control-section">
-                <h3>🎨 Ink Color</h3>
-                <div class="color-options">
-                    <div class="color-btn active" style="background: #000080;" onclick="selectColor('#000080')" title="Blue"></div>
-                    <div class="color-btn" style="background: #000000;" onclick="selectColor('#000000')" title="Black"></div>
-                    <div class="color-btn" style="background: #4B0082;" onclick="selectColor('#4B0082')" title="Purple"></div>
-                    <div class="color-btn" style="background: #DC143C;" onclick="selectColor('#DC143C')" title="Red"></div>
-                    <div class="color-btn" style="background: #006400;" onclick="selectColor('#006400')" title="Green"></div>
-                    <div class="color-btn" style="background: #FF8C00;" onclick="selectColor('#FF8C00')" title="Orange"></div>
+                <h3>🖊️ Ink Color</h3>
+                <div class="color-picker">
+                    <div class="color-option active" style="background: var(--ink-black)" onclick="changeInkColor('#000000', this)"></div>
+                    <div class="color-option" style="background: var(--ink-blue)" onclick="changeInkColor('#0066cc', this)"></div>
+                    <div class="color-option" style="background: var(--ink-red)" onclick="changeInkColor('#ff0000', this)"></div>
+                    <div class="color-option" style="background: var(--ink-green)" onclick="changeInkColor('#00aa00', this)"></div>
+                    <div class="color-option" style="background: var(--ink-purple)" onclick="changeInkColor('#9b59b6', this)"></div>
+                    <div class="color-option" style="background: var(--ink-pink)" onclick="changeInkColor('#ff69b4', this)"></div>
+                    <div class="color-option" style="background: var(--ink-orange)" onclick="changeInkColor('#ff8c00', this)"></div>
+                    <div class="color-option" style="background: var(--ink-brown)" onclick="changeInkColor('#8b4513', this)"></div>
                 </div>
             </div>
 
-            <!-- Paper Type -->
+            <!-- Highlighter -->
             <div class="control-section">
-                <h3>📄 Paper Style</h3>
-                <div class="paper-options">
-                    <div class="paper-option active" onclick="selectPaperType('plain')">
-                        <span style="font-size: 1.5rem;">📃</span>
-                        <span>Plain</span>
-                    </div>
-                    <div class="paper-option" onclick="selectPaperType('ruled')">
-                        <span style="font-size: 1.5rem;">📝</span>
-                        <span>Ruled</span>
-                    </div>
-                    <div class="paper-option" onclick="selectPaperType('dotted')">
-                        <span style="font-size: 1.5rem;">⚪</span>
-                        <span>Dotted</span>
-                    </div>
-                    <div class="paper-option" onclick="selectPaperType('grid')">
-                        <span style="font-size: 1.5rem;">⊞</span>
-                        <span>Grid</span>
-                    </div>
+                <h3>🖍️ Highlighters</h3>
+                <div class="highlighter-tools">
+                    <div class="highlighter-btn" style="background: var(--highlight-yellow);" onclick="toggleHighlighter('yellow')">Yellow</div>
+                    <div class="highlighter-btn" style="background: var(--highlight-pink);" onclick="toggleHighlighter('pink')">Pink</div>
+                    <div class="highlighter-btn" style="background: var(--highlight-green);" onclick="toggleHighlighter('green')">Green</div>
+                    <div class="highlighter-btn" style="background: var(--highlight-blue);" onclick="toggleHighlighter('blue')">Blue</div>
+                    <div class="highlighter-btn" style="background: var(--highlight-orange);" onclick="toggleHighlighter('orange')">Orange</div>
+                    <div class="highlighter-btn" style="background: var(--highlight-purple);" onclick="toggleHighlighter('purple')">Purple</div>
                 </div>
             </div>
 
-            <!-- Paper Color -->
+            <!-- Paper Style -->
             <div class="control-section">
-                <h3>🎨 Paper Color</h3>
-                <div class="color-options">
-                    <div class="color-btn active" style="background: #ffffff; border: 2px solid #ddd;" onclick="selectPaperColor('#ffffff')" title="White"></div>
-                    <div class="color-btn" style="background: #fef9e7;" onclick="selectPaperColor('#fef9e7')" title="Cream"></div>
-                    <div class="color-btn" style="background: #fffacd;" onclick="selectPaperColor('#fffacd')" title="Yellow"></div>
-                    <div class="color-btn" style="background: #e8f4f8;" onclick="selectPaperColor('#e8f4f8')" title="Blue"></div>
-                </div>
-            </div>
-
-            <!-- Customization Options -->
-            <div class="control-section">
-                <h3>⚙️ Customization</h3>
+                <h3>📄 Paper Background</h3>
                 <div class="control-group">
-                    <label>Layout Style:</label>
-                    <div class="style-grid" style="grid-template-columns: repeat(3, 1fr);">
-                        <div class="style-option active" onclick="selectLayout('single')" id="layout-single">
-                            <div class="preview">📄</div>
-                            <div class="name">Single</div>
-                        </div>
-                        <div class="style-option" onclick="selectLayout('double')" id="layout-double">
-                            <div class="preview">📋</div>
-                            <div class="name">2 Columns</div>
-                        </div>
-                        <div class="style-option" onclick="selectLayout('triple')" id="layout-triple">
-                            <div class="preview">📰</div>
-                            <div class="name">3 Columns</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label>Font Size: <span class="slider-value" id="fontSizeValue">20px</span></label>
-                    <input type="range" id="fontSize" min="14" max="32" value="20" oninput="updateFontSize(this.value)">
-                </div>
-                <div class="control-group">
-                    <label>Line Spacing: <span class="slider-value" id="lineSpacingValue">1.8</span></label>
-                    <input type="range" id="lineSpacing" min="1.2" max="2.5" step="0.1" value="1.8" oninput="updateLineSpacing(this.value)">
-                </div>
-                <div class="control-group">
-                    <label>Imperfection Level: <span class="slider-value" id="imperfectionValue">50%</span></label>
-                    <input type="range" id="imperfection" min="0" max="100" value="50" oninput="updateImperfection(this.value)">
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="smartFormat" checked onchange="updatePreview()">
-                    <label for="smartFormat">Enable Smart Formatting</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="compactMode" onchange="updatePreview()">
-                    <label for="compactMode">Compact Mode (Reduce spacing)</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="autoDate" onchange="updatePreview()">
-                    <label for="autoDate">Add Date & Time</label>
-                </div>
-            </div>
-
-            <!-- Decorative Elements -->
-            <div class="control-section">
-                <h3>🎨 Decorative Elements</h3>
-                <div class="control-group">
-                    <label style="margin-bottom: 0.8rem; display: block;">Quick Insert:</label>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
-                        <button class="tool-btn" onclick="insertText('[BOX]...[/BOX]')" style="font-size: 0.8rem;">📦 Box</button>
-                        <button class="tool-btn" onclick="insertText('[IMP]...[/IMP]')" style="font-size: 0.8rem;">⭐ Important</button>
-                        <button class="tool-btn" onclick="insertText('[FORMULA]...[/FORMULA]')" style="font-size: 0.8rem;">📐 Formula</button>
-                        <button class="tool-btn" onclick="insertText('[NOTE]...[/NOTE]')" style="font-size: 0.8rem;">📌 Note</button>
-                        <button class="tool-btn" onclick="insertText('[TIP]...[/TIP]')" style="font-size: 0.8rem;">💡 Tip</button>
-                        <button class="tool-btn" onclick="insertText('[STAR]...[/STAR]')" style="font-size: 0.8rem;">⭐ Star</button>
-                        <button class="tool-btn" onclick="insertText('---')" style="font-size: 0.8rem;">➖ Divider</button>
-                        <button class="tool-btn" onclick="insertText('[CIRCLE]...[/CIRCLE]')" style="font-size: 0.8rem;">⭕ Circle</button>
+                    <label>Paper Type:</label>
+                    <div class="paper-selector">
+                        <div class="paper-option active" style="background: var(--paper-white)" onclick="changePaperType('plain', this)"></div>
+                        <div class="paper-option lined" style="background: var(--paper-white)" onclick="changePaperType('lined', this)"></div>
+                        <div class="paper-option graph" style="background: var(--paper-white)" onclick="changePaperType('graph', this)"></div>
+                        <div class="paper-option dots" style="background: var(--paper-white)" onclick="changePaperType('dots', this)"></div>
                     </div>
                 </div>
                 <div class="control-group" style="margin-top: 1rem;">
-                    <label style="font-size: 0.85rem; opacity: 0.8;">
-                        💡 Use these tags in your notes to add special formatting!
-                    </label>
+                    <label>Paper Color:</label>
+                    <div class="paper-selector">
+                        <div class="paper-option active" style="background: var(--paper-white)" onclick="changePaperColor('--paper-white', this)"></div>
+                        <div class="paper-option" style="background: var(--paper-cream)" onclick="changePaperColor('--paper-cream', this)"></div>
+                        <div class="paper-option" style="background: var(--paper-yellow)" onclick="changePaperColor('--paper-yellow', this)"></div>
+                        <div class="paper-option" style="background: var(--paper-blue)" onclick="changePaperColor('--paper-blue', this)"></div>
+                        <div class="paper-option" style="background: var(--paper-pink)" onclick="changePaperColor('--paper-pink', this)"></div>
+                        <div class="paper-option" style="background: var(--paper-mint)" onclick="changePaperColor('--paper-mint', this)"></div>
+                        <div class="paper-option" style="background: var(--paper-lavender)" onclick="changePaperColor('--paper-lavender', this)"></div>
+                        <div class="paper-option" style="background: var(--paper-peach)" onclick="changePaperColor('--paper-peach', this)"></div>
+                        <div class="paper-option" style="background: var(--paper-recycled)" onclick="changePaperColor('--paper-recycled', this)"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Templates -->
+            <!-- Drawing Tools -->
             <div class="control-section">
-                <h3>📋 Quick Templates</h3>
-                <div class="templates-section">
-                    <div class="template-grid">
-                        <button class="template-btn" onclick="loadTemplate('physics')">
-                            <span class="template-title">⚛️ Physics</span>
-                            <span class="template-desc">Derivations & formulas</span>
-                        </button>
-                        <button class="template-btn" onclick="loadTemplate('chemistry')">
-                            <span class="template-title">🧪 Chemistry</span>
-                            <span class="template-desc">Reactions & equations</span>
-                        </button>
-                        <button class="template-btn" onclick="loadTemplate('math')">
-                            <span class="template-title">📐 Math</span>
-                            <span class="template-desc">Solutions & proofs</span>
-                        </button>
-                        <button class="template-btn" onclick="loadTemplate('biology')">
-                            <span class="template-title">🧬 Biology</span>
-                            <span class="template-desc">Diagrams & notes</span>
-                        </button>
-                    </div>
+                <h3>✏️ Drawing Tools</h3>
+                <div class="drawing-tools">
+                    <button class="tool-btn active" onclick="selectTool('pen')">Pen</button>
+                    <button class="tool-btn" onclick="selectTool('eraser')">Eraser</button>
+                    <button class="tool-btn" onclick="selectTool('line')">Line</button>
+                    <button class="tool-btn" onclick="selectTool('arrow')">Arrow</button>
+                    <button class="tool-btn" onclick="selectTool('box')">Box</button>
+                    <button class="tool-btn" onclick="clearCanvas()">Clear</button>
+                </div>
+                <div class="control-group" style="margin-top: 1rem;">
+                    <label>Brush Size: <span id="brushValue">3</span>px</label>
+                    <input type="range" id="brushSize" min="1" max="10" value="3" oninput="updateBrushSize(this.value)">
+                </div>
+            </div>
+
+            <!-- Font Settings -->
+            <div class="control-section">
+                <h3>⚙️ Font Settings</h3>
+                <div class="control-group">
+                    <label>Font Size: <span id="fontValue">20</span>px</label>
+                    <input type="range" id="fontSize" min="12" max="36" value="20" oninput="updateFontSize(this.value)">
+                </div>
+                <div class="control-group">
+                    <label>Line Spacing: <span id="spacingValue">1.8</span></label>
+                    <input type="range" id="lineSpacing" min="1" max="3" step="0.1" value="1.8" oninput="updateLineSpacing(this.value)">
+                </div>
+                <div class="control-group">
+                    <label>Handwriting Style:</label>
+                    <select id="fontStyle" onchange="updateFontStyle(this.value)" style="width: 100%; padding: 0.8rem; border-radius: 12px; border: 2px solid #e0e0e0; font-family: 'League Spartan', sans-serif; font-weight: 600;">
+                        <option value="Caveat">Caveat (Casual)</option>
+                        <option value="Kalam">Kalam (Bold)</option>
+                        <option value="Patrick Hand">Patrick Hand</option>
+                        <option value="Indie Flower">Indie Flower</option>
+                        <option value="Dancing Script">Dancing Script</option>
+                        <option value="Shadows Into Light">Shadows Into Light</option>
+                        <option value="Architects Daughter">Architects Daughter</option>
+                        <option value="Permanent Marker">Permanent Marker</option>
+                        <option value="Gochi Hand">Gochi Hand</option>
+                        <option value="Covered By Your Grace">Covered By Your Grace</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Export -->
+            <div class="control-section">
+                <h3>💾 Export</h3>
+                <div class="export-buttons">
+                    <button class="btn btn-primary" onclick="exportAsPDF()">📄 PDF</button>
+                    <button class="btn btn-secondary" onclick="exportAsImage('png')">🖼️ PNG</button>
                 </div>
             </div>
         </div>
 
-        <!-- Preview Panel -->
-        <div class="preview-panel">
+        <!-- Preview Area -->
+        <div class="preview-area">
             <div class="preview-header">
-                <h3>👁️ Live Preview</h3>
-                <div class="preview-actions">
-                    <button class="icon-btn" onclick="toggleDrawingMode()" title="Toggle Drawing Mode" id="drawBtn">✏️</button>
-                    <button class="icon-btn" onclick="clearCanvas()" title="Clear Drawings">🗑️</button>
+                <h2>📖 Live Preview</h2>
+                <div class="preview-stats">
+                    <div class="stat">
+                        <span>📊</span>
+                        <span id="wordCount">0 words</span>
+                    </div>
+                    <div class="stat">
+                        <span>📏</span>
+                        <span id="charCount">0 chars</span>
+                    </div>
                 </div>
             </div>
-
-            <div class="drawing-tools" id="drawingTools" style="display: none;">
-                <button class="tool-btn active" onclick="setDrawingTool('pen')">Pen</button>
-                <button class="tool-btn" onclick="setDrawingTool('highlighter')">Highlighter</button>
-                <button class="tool-btn" onclick="setDrawingTool('eraser')">Eraser</button>
-                <input type="color" id="drawColor" value="#000000" style="height: 40px; border-radius: 8px;">
-            </div>
-
-            <div class="paper-container">
-                <div id="paperPreview" class="handwritten-text font-caveat">
-                    Start typing or paste your notes to see the magic happen! ✨
+            <div style="position: relative;">
+                <div class="preview-wrapper">
+                    <div id="paperPreview"></div>
+                    <canvas id="drawingCanvas"></canvas>
                 </div>
-                <canvas id="drawingCanvas"></canvas>
-            </div>
-
-            <div class="export-section">
-                <button class="export-btn pdf" onclick="exportAsPDF()">📄 PDF</button>
-                <button class="export-btn png" onclick="exportAsImage('png')">🖼️ PNG</button>
-                <button class="export-btn jpg" onclick="exportAsImage('jpg')">📸 JPG</button>
             </div>
         </div>
     </div>
 
     <script>
-        // State management
-        let currentStyle = 'caveat';
-        let currentColor = '#000080';
+        // Global variables
+        let currentInkColor = '#000000';
+        let currentPaperColor = getComputedStyle(document.documentElement).getPropertyValue('--paper-white');
         let currentPaperType = 'plain';
-        let currentPaperColor = '#ffffff';
-        let imperfectionLevel = 50;
-        let isDrawingMode = false;
+        let currentFont = 'Caveat';
+        let currentTheme = null;
+        let activeHighlighter = null;
+        
+        // Drawing variables
         let isDrawing = false;
-        let drawingTool = 'pen';
-        let currentLayout = 'single';
+        let lastX = 0;
+        let lastY = 0;
+        let currentTool = 'pen';
+        let brushSize = 3;
+        let canvas, ctx;
 
-        // Canvas setup
-        const canvas = document.getElementById('drawingCanvas');
-        const ctx = canvas.getContext('2d');
-        let canvasHistory = [];
-        let historyStep = -1;
+        // Initialize
+        window.addEventListener('load', () => {
+            initCanvas();
+            createParticles();
+            loadExampleContent();
+        });
 
+        // Canvas initialization
+        function initCanvas() {
+            canvas = document.getElementById('drawingCanvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            // Resize canvas when window resizes or content changes
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Watch for content changes
+            const observer = new MutationObserver(resizeCanvas);
+            observer.observe(document.getElementById('paperPreview'), {
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+        }
+        
         function resizeCanvas() {
             const preview = document.getElementById('paperPreview');
-            canvas.width = preview.offsetWidth;
-            canvas.height = preview.offsetHeight;
-            if (canvasHistory.length > 0) {
-                restoreCanvas();
-            }
-        }
-
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        // Drawing functions
-        function toggleDrawingMode() {
-            isDrawingMode = !isDrawingMode;
-            const canvas = document.getElementById('drawingCanvas');
-            const tools = document.getElementById('drawingTools');
-            const drawBtn = document.getElementById('drawBtn');
             
-            if (isDrawingMode) {
-                canvas.classList.add('drawing-enabled');
-                tools.style.display = 'flex';
-                drawBtn.style.background = '#e74c3c';
-            } else {
-                canvas.classList.remove('drawing-enabled');
-                tools.style.display = 'none';
-                drawBtn.style.background = '';
+            // Save current drawing
+            const imageData = canvas.width > 0 ? ctx.getImageData(0, 0, canvas.width, canvas.height) : null;
+            
+            // Set canvas to fixed 800px width to match paper
+            canvas.width = 800;
+            canvas.height = Math.max(preview.scrollHeight, 1100);
+            
+            // Restore drawing if exists
+            if (imageData) {
+                ctx.putImageData(imageData, 0, 0);
             }
         }
-
-        function setDrawingTool(tool) {
-            drawingTool = tool;
-            document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        function saveCanvas() {
-            historyStep++;
-            if (historyStep < canvasHistory.length) {
-                canvasHistory.length = historyStep;
-            }
-            canvasHistory.push(canvas.toDataURL());
-        }
-
-        function restoreCanvas() {
-            if (historyStep >= 0) {
-                const img = new Image();
-                img.src = canvasHistory[historyStep];
-                img.onload = () => {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0);
-                };
-            }
-        }
-
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-
-        // Touch support
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent('mousedown', {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        });
-
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent('mousemove', {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        });
-
-        canvas.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            const mouseEvent = new MouseEvent('mouseup', {});
-            canvas.dispatchEvent(mouseEvent);
-        });
 
         function startDrawing(e) {
-            if (!isDrawingMode) return;
             isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            lastX = e.clientX - rect.left;
+            lastY = e.clientY - rect.top;
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
             ctx.beginPath();
-            ctx.moveTo(x, y);
-        }
-
-        function draw(e) {
-            if (!isDrawing || !isDrawingMode) return;
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
             
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            if (drawingTool === 'pen') {
-                ctx.strokeStyle = document.getElementById('drawColor').value;
-                ctx.lineWidth = 2;
-                ctx.globalAlpha = 1;
-            } else if (drawingTool === 'highlighter') {
-                ctx.strokeStyle = '#FFEB3B';
-                ctx.lineWidth = 20;
-                ctx.globalAlpha = 0.3;
-            } else if (drawingTool === 'eraser') {
-                ctx.strokeStyle = currentPaperColor;
-                ctx.lineWidth = 20;
-                ctx.globalAlpha = 1;
+            if (currentTool === 'pen') {
+                ctx.strokeStyle = currentInkColor;
+                ctx.lineWidth = brushSize;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            } else if (currentTool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.lineWidth = brushSize * 3;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+                ctx.globalCompositeOperation = 'source-over';
             }
             
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            ctx.lineTo(x, y);
-            ctx.stroke();
+            lastX = x;
+            lastY = y;
         }
 
         function stopDrawing() {
-            if (!isDrawing) return;
             isDrawing = false;
-            saveCanvas();
+        }
+
+        function selectTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function updateBrushSize(value) {
+            brushSize = parseInt(value);
+            document.getElementById('brushValue').textContent = value;
         }
 
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            canvasHistory = [];
-            historyStep = -1;
         }
 
-        // Style selection
-        function selectStyle(style) {
-            currentStyle = style;
-            document.querySelectorAll('.style-option').forEach(opt => opt.classList.remove('active'));
-            event.target.closest('.style-option').classList.add('active');
-            updatePreview();
-        }
-
-        function selectColor(color) {
-            currentColor = color;
-            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            updatePreview();
-        }
-
-        function selectPaperType(type) {
-            currentPaperType = type;
-            document.querySelectorAll('.paper-option').forEach(opt => opt.classList.remove('active'));
-            event.target.closest('.paper-option').classList.add('active');
-            updatePreview();
-        }
-
-        function selectPaperColor(color) {
-            currentPaperColor = color;
-            document.querySelectorAll('.color-options')[1].querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            updatePreview();
-        }
-
-        function selectLayout(layout) {
-            currentLayout = layout;
-            document.getElementById('layout-single').classList.remove('active');
-            document.getElementById('layout-double').classList.remove('active');
-            document.getElementById('layout-triple').classList.remove('active');
-            document.getElementById('layout-' + layout).classList.add('active');
-            updatePreview();
-        }
-
-        function insertText(text) {
-            const textarea = document.getElementById('notesInput');
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const currentText = textarea.value;
+        // Create background particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a8e6cf', '#ffd3e1'];
             
-            // Insert text at cursor position
-            const newText = currentText.substring(0, start) + text + currentText.substring(end);
-            textarea.value = newText;
-            
-            // Move cursor to inside the tags if it's a tag pair
-            if (text.includes('...')) {
-                const cursorPos = start + text.indexOf('...');
-                textarea.setSelectionRange(cursorPos, cursorPos + 3);
-            } else {
-                textarea.setSelectionRange(start + text.length, start + text.length);
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 100 + 50 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
+                container.appendChild(particle);
             }
+        }
+
+        // Theme functions
+        function applyTheme(theme) {
+            currentTheme = theme;
+            document.querySelectorAll('.theme-card').forEach(card => card.classList.remove('active'));
+            event.target.classList.add('active');
             
-            textarea.focus();
+            const themes = {
+                study: { ink: '#0066cc', paper: '--paper-blue' },
+                creative: { ink: '#ff0000', paper: '--paper-yellow' },
+                professional: { ink: '#000000', paper: '--paper-white' },
+                neon: { ink: '#ff0080', paper: '--paper-white' },
+                pastel: { ink: '#9b59b6', paper: '--paper-pink' },
+                sunset: { ink: '#ff8c00', paper: '--paper-peach' }
+            };
+            
+            if (themes[theme]) {
+                changeInkColor(themes[theme].ink);
+                changePaperColor(themes[theme].paper);
+                updatePreview();
+            }
+        }
+
+        function changeInkColor(color, element) {
+            currentInkColor = color;
+            if (element) {
+                document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+                element.classList.add('active');
+            }
             updatePreview();
+        }
+
+        function changePaperType(type, element) {
+            currentPaperType = type;
+            const preview = document.getElementById('paperPreview');
+            preview.className = type;
+            
+            if (element) {
+                element.parentElement.querySelectorAll('.paper-option').forEach(opt => opt.classList.remove('active'));
+                element.classList.add('active');
+            }
+        }
+
+        function changePaperColor(colorVar, element) {
+            currentPaperColor = getComputedStyle(document.documentElement).getPropertyValue(colorVar);
+            document.getElementById('paperPreview').style.backgroundColor = currentPaperColor;
+            
+            if (element) {
+                element.parentElement.querySelectorAll('.paper-option').forEach(opt => opt.classList.remove('active'));
+                element.classList.add('active');
+            }
+        }
+
+        function toggleHighlighter(color) {
+            activeHighlighter = activeHighlighter === color ? null : color;
+            document.querySelectorAll('.highlighter-btn').forEach(btn => btn.classList.remove('active'));
+            if (activeHighlighter) {
+                event.target.classList.add('active');
+            }
         }
 
         function updateFontSize(value) {
-            document.getElementById('fontSizeValue').textContent = value + 'px';
+            document.getElementById('fontValue').textContent = value;
             updatePreview();
         }
 
         function updateLineSpacing(value) {
-            document.getElementById('lineSpacingValue').textContent = value;
+            document.getElementById('spacingValue').textContent = value;
             updatePreview();
         }
 
-        function updateImperfection(value) {
-            imperfectionLevel = value;
-            document.getElementById('imperfectionValue').textContent = value + '%';
+        function updateFontStyle(font) {
+            currentFont = font;
             updatePreview();
         }
 
-        // Preview update with smart formatting
+        // Update preview
         function updatePreview() {
             const input = document.getElementById('notesInput').value;
             const preview = document.getElementById('paperPreview');
             const fontSize = document.getElementById('fontSize').value;
             const lineSpacing = document.getElementById('lineSpacing').value;
-            const smartFormat = document.getElementById('smartFormat').checked;
-            const autoDate = document.getElementById('autoDate').checked;
             
-            if (!input.trim()) {
-                preview.innerHTML = 'Start typing or paste your notes to see the magic happen! ✨';
-                return;
-            }
-
-            let formatted = input;
-
-            if (smartFormat) {
-                // Add date if enabled
-                if (autoDate) {
-                    const now = new Date();
-                    const dateStr = now.toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                    });
-                    const timeStr = now.toLocaleTimeString('en-US', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
-                    });
-                    formatted = `<div class="date-stamp">📅 ${dateStr} • ⏰ ${timeStr}</div>\n` + formatted;
-                }
-
-                // Convert custom tags first
-                // Box tags
-                formatted = formatted.replace(/\[BOX\](.*?)\[\/BOX\]/gs, '<div class="box">$1</div>');
-                formatted = formatted.replace(/\[IMP\](.*?)\[\/IMP\]/gs, '<div class="important-box">$1</div>');
-                formatted = formatted.replace(/\[FORMULA\](.*?)\[\/FORMULA\]/gs, '<div class="formula-box">$1</div>');
-                
-                // Inline markers
-                formatted = formatted.replace(/\[STAR\](.*?)\[\/STAR\]/g, '<span class="star">$1</span>');
-                formatted = formatted.replace(/\[NOTE\](.*?)\[\/NOTE\]/g, '<span class="note">$1</span>');
-                formatted = formatted.replace(/\[TIP\](.*?)\[\/TIP\]/g, '<span class="tip">$1</span>');
-                formatted = formatted.replace(/\[IMPORTANT\](.*?)\[\/IMPORTANT\]/g, '<span class="important">$1</span>');
-                formatted = formatted.replace(/\[CIRCLE\](.*?)\[\/CIRCLE\]/g, '<span class="circled">$1</span>');
-                
-                // Arrows
-                formatted = formatted.replace(/\[→\]/g, '<span class="arrow-right"></span>');
-                formatted = formatted.replace(/\[←\]/g, '<span class="arrow-left"></span>');
-                formatted = formatted.replace(/\[↔\]/g, '<span class="arrow-both"></span>');
-                
-                // Divider
-                formatted = formatted.replace(/^---$/gm, '<div class="divider">✦</div>');
-                
-                // Convert markdown-style formatting
-                // Headings
-                formatted = formatted.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-                formatted = formatted.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-                formatted = formatted.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-                
-                // Bold
-                formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                
-                // Italic
-                formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                
-                // Highlight
-                formatted = formatted.replace(/==(.*?)==/g, '<mark>$1</mark>');
-                
-                // Underline variations
-                formatted = formatted.replace(/__(.*?)__/g, '<span class="double-underline">$1</span>');
-                formatted = formatted.replace(/~(.*?)~/g, '<span class="underline">$1</span>');
-                
-                // Bullet lists with special markers
-                let lines = formatted.split('\n');
-                let inList = false;
-                let listType = 'normal';
-                let processedLines = [];
-                
-                for (let i = 0; i < lines.length; i++) {
-                    let line = lines[i];
-                    
-                    // Check for special bullet types
-                    if (line.match(/^[\-] /)) {
-                        if (!inList) {
-                            processedLines.push('<ul class="dash-bullets">');
-                            inList = true;
-                            listType = 'dash';
-                        } else if (listType !== 'dash') {
-                            processedLines.push('</ul><ul class="dash-bullets">');
-                            listType = 'dash';
-                        }
-                        processedLines.push('<li>' + line.substring(2) + '</li>');
-                    } else if (line.match(/^[>] /)) {
-                        if (!inList) {
-                            processedLines.push('<ul class="arrow-bullets">');
-                            inList = true;
-                            listType = 'arrow';
-                        } else if (listType !== 'arrow') {
-                            processedLines.push('</ul><ul class="arrow-bullets">');
-                            listType = 'arrow';
-                        }
-                        processedLines.push('<li>' + line.substring(2) + '</li>');
-                    } else if (line.match(/^[\*] /)) {
-                        if (!inList) {
-                            processedLines.push('<ul class="star-bullets">');
-                            inList = true;
-                            listType = 'star';
-                        } else if (listType !== 'star') {
-                            processedLines.push('</ul><ul class="star-bullets">');
-                            listType = 'star';
-                        }
-                        processedLines.push('<li>' + line.substring(2) + '</li>');
-                    } else if (line.match(/^[+] /)) {
-                        if (!inList) {
-                            processedLines.push('<ul class="check-bullets">');
-                            inList = true;
-                            listType = 'check';
-                        } else if (listType !== 'check') {
-                            processedLines.push('</ul><ul class="check-bullets">');
-                            listType = 'check';
-                        }
-                        processedLines.push('<li>' + line.substring(2) + '</li>');
-                    } else {
-                        if (inList) {
-                            processedLines.push('</ul>');
-                            inList = false;
-                        }
-                        processedLines.push(line);
-                    }
-                }
-                
-                if (inList) {
-                    processedLines.push('</ul>');
-                }
-                
-                formatted = processedLines.join('\n');
-                
-                // Line breaks
-                formatted = formatted.replace(/\n/g, '<br>');
-            } else {
-                formatted = formatted.replace(/\n/g, '<br>');
-            }
-
-            // Apply imperfection
-            if (imperfectionLevel > 0) {
-                formatted = applyImperfection(formatted);
-            }
-
-            // Update preview
-            preview.innerHTML = formatted;
-            preview.className = `handwritten-text font-${currentStyle}`;
+            // Update stats
+            const words = input.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const chars = input.length;
+            document.getElementById('wordCount').textContent = words + ' words';
+            document.getElementById('charCount').textContent = chars + ' chars';
             
-            // Add layout class
-            if (currentLayout !== 'single') {
-                preview.classList.add('layout-' + currentLayout);
-            }
+            // Process content
+            let html = processMarkdown(input);
             
-            // Add compact mode class
-            if (document.getElementById('compactMode').checked) {
-                preview.classList.add('compact-mode');
-            }
-            
-            preview.style.color = currentColor;
+            preview.innerHTML = html;
+            preview.style.fontFamily = `'${currentFont}', cursive`;
             preview.style.fontSize = fontSize + 'px';
             preview.style.lineHeight = lineSpacing;
-            preview.style.backgroundColor = currentPaperColor;
+            preview.style.color = currentInkColor;
             
-            // Update paper type
-            preview.classList.remove('paper-ruled', 'paper-dotted', 'paper-grid');
-            if (currentPaperType !== 'plain') {
-                preview.classList.add('paper-' + currentPaperType);
-            }
-
-            // Resize canvas to match
-            resizeCanvas();
+            // Resize canvas after content update
+            setTimeout(resizeCanvas, 100);
         }
 
-        function applyImperfection(text) {
-            // Add slight rotation and spacing variations to characters
-            const level = imperfectionLevel / 100;
-            let result = '';
-            let inTag = false;
+        function processMarkdown(text) {
+            let html = text;
             
-            for (let i = 0; i < text.length; i++) {
-                const char = text[i];
-                
-                if (char === '<') inTag = true;
-                if (char === '>') inTag = false;
-                
-                if (!inTag && char.match(/[a-zA-Z0-9]/)) {
-                    const rotation = (Math.random() - 0.5) * 3 * level;
-                    const spacing = Math.random() * 2 * level;
-                    result += `<span class="imperfect-char" style="transform: rotate(${rotation}deg); margin-right: ${spacing}px; display: inline-block;">${char}</span>`;
-                } else {
-                    result += char;
-                }
-            }
+            // Headers with gradient
+            html = html.replace(/^# (.+)$/gm, '<h1 class="text-gradient" style="font-size: 2em; margin: 1em 0;">$1</h1>');
+            html = html.replace(/^## (.+)$/gm, '<h2 class="rainbow-underline" style="font-size: 1.6em; margin: 0.8em 0;">$1</h2>');
+            html = html.replace(/^### (.+)$/gm, '<h3 style="font-size: 1.3em; margin: 0.6em 0;">$1</h3>');
             
-            return result;
-        }
-
-        // Templates
-        function loadTemplate(type) {
-            const templates = {
-                physics: `# Physics - Quick Reference Sheet
-
-## Kinematics
-
-[FORMULA]
-- v = u + at
-- s = ut + ½at²
-- v² = u² + 2as
-[/FORMULA]
-
-[NOTE]Where: v=final, u=initial, a=acceleration, t=time, s=displacement[/NOTE]
-
-## Newton's Laws
-
-[IMP]
-**First Law:** Inertia - Object maintains state unless force applied
-**Second Law:** F = ma
-**Third Law:** Action = Reaction (opposite direction)
-[/IMP]
-
-## Work, Energy & Power
-
-- Work: W = F·s·cosθ
-- Kinetic Energy: KE = ½mv²
-- Potential Energy: PE = mgh
-- [STAR]Power: P = W/t = F·v[/STAR]
-
----
-
-## Circular Motion
-
-> v = rω
-> a = v²/r = rω²
-> [CIRCLE]F = mv²/r[/CIRCLE]
-
-## Gravitation
-
-[FORMULA]
-- F = Gm₁m₂/r²
-- g = GM/R²
-- Orbital velocity: v = √(GM/r)
-[/FORMULA]
-
-[TIP]Remember: At surface r = R[/TIP]
-
-## Thermodynamics
-
-+ First Law: ΔU = Q - W
-+ PV = nRT (Ideal Gas)
-+ Efficiency: η = W/Q₁
-
-## Waves & Sound
-
-- v = fλ
-- [STAR]Doppler: f' = f(v±v₀)/(v∓vₛ)[/STAR]
-- Intensity ∝ Amplitude²
-
-## Electricity
-
-[BOX]
-**Ohm's Law:** V = IR
-**Power:** P = VI = I²R = V²/R
-**Charge:** Q = It
-[/BOX]
-
-## Optics
-
-- Mirror/Lens: 1/f = 1/v + 1/u
-- Magnification: m = v/u
-- [IMPORTANT]Snell's Law: μ₁sinθ₁ = μ₂sinθ₂[/IMPORTANT]`,
-
-                chemistry: `# Chemistry - Formula & Reaction Guide
-
-## Mole Concept
-
-[FORMULA]
-- n = m/M (mass/molar mass)
-- n = V/22.4 L (at STP)
-- n = N/Nₐ
-- [CIRCLE]Nₐ = 6.022×10²³[/CIRCLE]
-[/FORMULA]
-
-## Acids & Bases
-
-[IMP]
-pH + pOH = 14
-pH = -log[H⁺]
-pOH = -log[OH⁻]
-[/IMP]
-
-**Strong Acids:** HCl, H₂SO₄, HNO₃
-**Strong Bases:** NaOH, KOH
-
----
-
-## Redox Reactions
-
-[NOTE]OIL RIG - Oxidation Is Loss, Reduction Is Gain (of electrons)[/NOTE]
-
-**Example:**
-- Zn → Zn²⁺ + 2e⁻ [→] Oxidation
-- Cu²⁺ + 2e⁻ → Cu [→] Reduction
-
-## Common Reactions
-
-**Combustion:**
-> CH₄ + 2O₂ → CO₂ + 2H₂O
-
-**Neutralization:**
-> HCl + NaOH → NaCl + H₂O
-
-**Displacement:**
-> Zn + CuSO₄ → ZnSO₄ + Cu
-
-## Gas Laws
-
-[BOX]
-**Ideal Gas:** PV = nRT
-**Combined:** P₁V₁/T₁ = P₂V₂/T₂
-**Density:** d = PM/RT
-[/BOX]
-
-[TIP]R = 0.0821 L·atm/(mol·K)[/TIP]
-
-## Equilibrium
-
-- Kc = [Products]/[Reactants]
-- [STAR]Kp = Kc(RT)^Δn[/STAR]
-- Le Chatelier's Principle
-
-## Electrochemistry
-
-[FORMULA]
-- E°cell = E°cathode - E°anode
-- ΔG° = -nFE°
-- Charge: Q = It/96500
-[/FORMULA]
-
-## Organic Chemistry
-
-**Functional Groups:**
-+ Alcohol: -OH
-+ Aldehyde: -CHO
-+ Ketone: >C=O
-+ Carboxylic Acid: -COOH`,
-
-                math: `# Mathematics - Essential Formulas
-
-## Algebra
-
-[IMP]
-**Quadratic Formula:**
-x = (-b ± √(b²-4ac))/2a
-
-**Discriminant:** Δ = b²-4ac
-- Δ > 0: Two real roots
-- Δ = 0: One real root
-- Δ < 0: Complex roots
-[/IMP]
-
-**Binomial Identities:**
-- (a+b)² = a²+2ab+b²
-- (a-b)² = a²-2ab+b²
-- [CIRCLE]a²-b² = (a+b)(a-b)[/CIRCLE]
-- (a+b)³ = a³+3a²b+3ab²+b³
-
----
-
-## Progressions
-
-[FORMULA]
-**AP:**
-- nth term: aₙ = a+(n-1)d
-- Sum: Sₙ = n/2[2a+(n-1)d]
-
-**GP:**
-- nth term: aₙ = arⁿ⁻¹
-- Sum: Sₙ = a(rⁿ-1)/(r-1)
-[/FORMULA]
-
-## Trigonometry
-
-[BOX]
-**Fundamental:**
-- sin²θ + cos²θ = 1
-- 1 + tan²θ = sec²θ
-- 1 + cot²θ = cosec²θ
-[/BOX]
-
-**Compound Angles:**
-> sin(A±B) = sinA cosB ± cosA sinB
-> cos(A±B) = cosA cosB ∓ sinA sinB
-
-[TIP]Remember: Signs change in cos![/TIP]
-
-## Calculus
-
-**Derivatives:**
-- d/dx(xⁿ) = nxⁿ⁻¹
-- d/dx(sin x) = cos x
-- d/dx(cos x) = -sin x
-- [STAR]d/dx(eˣ) = eˣ[/STAR]
-- d/dx(ln x) = 1/x
-
-**Integration:**
-+ ∫xⁿ dx = xⁿ⁺¹/(n+1)
-+ ∫eˣ dx = eˣ + C
-+ ∫1/x dx = ln|x| + C
-
----
-
-## Coordinate Geometry
-
-[FORMULA]
-Distance: d = √[(x₂-x₁)²+(y₂-y₁)²]
-Midpoint: M = ((x₁+x₂)/2, (y₁+y₂)/2)
-Slope: m = (y₂-y₁)/(x₂-x₁)
-[/FORMULA]
-
-**Line Equations:**
-- Slope form: y = mx + c
-- Point-slope: y-y₁ = m(x-x₁)
-
-**Circle:**
-- Standard: x² + y² = r²
-- General: (x-h)² + (y-k)² = r²`,
-
-                biology: `# Biology - Quick Study Guide
-
-## Cell Structure
-
-[IMP]
-**Prokaryotic vs Eukaryotic:**
-- Prokaryotic: No nucleus (Bacteria)
-- Eukaryotic: Nucleus present (Animals, Plants)
-[/IMP]
-
-**Key Organelles:**
-- [STAR]Nucleus[/STAR]: Genetic control center
-- Mitochondria: ATP production ("Powerhouse")
-- Ribosomes: Protein synthesis
-- ER: Transport network
-- Golgi: Packaging & secretion
-
----
-
-## Photosynthesis
-
-[FORMULA]
-**Overall Equation:**
-6CO₂ + 12H₂O → C₆H₁₂O₆ + 6O₂ + 6H₂O
-[/FORMULA]
-
-[BOX]
-**Light Reaction:** (Thylakoid)
-- Water splitting
-- ATP & NADPH formation
-- O₂ released
-
-**Dark Reaction:** (Stroma)
-- CO₂ fixation (Calvin Cycle)
-- Glucose synthesis
-[/BOX]
-
-## Respiration
-
-**Stages:**
-+ [CIRCLE]Glycolysis[/CIRCLE]: 2 ATP (Cytoplasm)
-+ Krebs Cycle: 2 ATP (Mitochondria)
-+ ETC: 34 ATP (Inner membrane)
-
-[TIP]Total: 38 ATP per glucose[/TIP]
-
----
-
-## DNA & RNA
-
-[NOTE]DNA: Deoxyribonucleic Acid
-RNA: Ribonucleic Acid[/NOTE]
-
-**DNA Structure:**
-> Double helix
-> Base pairs: A-T (2 bonds), G-C (3 bonds)
-> Antiparallel strands
-
-**Central Dogma:**
-DNA [→] RNA [→] Protein
-
-## Genetics
-
-[IMP]
-**Mendel's Laws:**
-1. Law of Segregation
-2. Law of Independent Assortment
-[/IMP]
-
-**Genetic Ratios:**
-- Monohybrid: 3:1 (Phenotype), 1:2:1 (Genotype)
-- Dihybrid: 9:3:3:1
-- Test Cross: 1:1
-
-## Ecology
-
-**Trophic Levels:**
-Producers → Primary → Secondary → Tertiary
-
-[STAR]10% Energy Rule[/STAR]: Only 10% energy transfers to next level
-
-**Ecological Pyramids:**
-+ Number
-+ Biomass
-+ Energy (Always upright!)
-
----
-
-## Plant Hormones
-
-- **Auxins:** Cell elongation, apical dominance
-- **Gibberellins:** Stem growth, seed germination
-- **Cytokinins:** Cell division
-- **ABA:** Stomatal closure, dormancy
-- **Ethylene:** Fruit ripening`
-            };
-
-            document.getElementById('notesInput').value = templates[type] || '';
-            updatePreview();
+            // Highlights
+            html = html.replace(/\[HIGHLIGHT color="?(\w+)"?\](.+?)\[\/HIGHLIGHT\]/g, '<span class="highlight-$1">$2</span>');
+            
+            // Special blocks
+            html = html.replace(/\[FORMULA\]([\s\S]+?)\[\/FORMULA\]/g, '<div style="background: var(--highlight-blue); padding: 1.5em; border-radius: 12px; margin: 1em 0; border-left: 5px solid #0066cc;">$1</div>');
+            html = html.replace(/\[IMP\]([\s\S]+?)\[\/IMP\]/g, '<div style="background: var(--highlight-yellow); padding: 1.5em; border-radius: 12px; margin: 1em 0; border-left: 5px solid #ff6b6b;">⚠️ $1</div>');
+            html = html.replace(/\[NOTE\](.+?)\[\/NOTE\]/g, '<div style="background: var(--highlight-green); padding: 1em; border-radius: 12px; margin: 1em 0;">💡 $1</div>');
+            html = html.replace(/\[BOX\]([\s\S]+?)\[\/BOX\]/g, '<div style="border: 3px dashed currentColor; padding: 1.5em; border-radius: 12px; margin: 1em 0;">$1</div>');
+            html = html.replace(/\[STAR\](.+?)\[\/STAR\]/g, '<div style="background: var(--highlight-orange); padding: 1em; border-radius: 12px; margin: 1em 0;">⭐ $1</div>');
+            html = html.replace(/\[TIP\](.+?)\[\/TIP\]/g, '<div style="background: var(--highlight-purple); padding: 1em; border-radius: 12px; margin: 1em 0;">💡 $1</div>');
+            
+            // Bold & Italic
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight: 800;">$1</strong>');
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            
+            // Highlight text
+            html = html.replace(/==(.+?)==/g, '<mark class="highlight-yellow">$1</mark>');
+            
+            // Horizontal rule
+            html = html.replace(/^---$/gm, '<hr style="border: none; border-top: 3px solid currentColor; margin: 2em 0; opacity: 0.3;">');
+            
+            // Bullet points (different styles)
+            html = html.replace(/^- (.+)$/gm, '<div style="margin: 0.5em 0;">▪️ $1</div>');
+            html = html.replace(/^> (.+)$/gm, '<div style="margin: 0.5em 0;">➤ $1</div>');
+            html = html.replace(/^\* (.+)$/gm, '<div style="margin: 0.5em 0;">⭐ $1</div>');
+            html = html.replace(/^\+ (.+)$/gm, '<div style="margin: 0.5em 0;">✅ $1</div>');
+            
+            // Line breaks
+            html = html.replace(/\n/g, '<br>');
+            
+            return html;
         }
 
         // Export functions
-        function showLoading() {
-            document.getElementById('loadingIndicator').classList.add('show');
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingIndicator').classList.remove('show');
-        }
-
         async function exportAsPDF() {
             showLoading();
             
             try {
                 const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
                 const preview = document.getElementById('paperPreview');
                 const canvasEl = document.getElementById('drawingCanvas');
                 
-                // Create high-quality canvas capture
-                const scale = 3; // 3x resolution for better quality
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                
+                const scale = 3;
                 const canvas = await html2canvas(preview, {
                     scale: scale,
                     backgroundColor: currentPaperColor,
@@ -1971,126 +1283,58 @@ Producers → Primary → Secondary → Tertiary
                     useCORS: true
                 });
 
-                // Create a temporary canvas to combine preview and drawings
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = canvas.width;
                 tempCanvas.height = canvas.height;
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                // Draw the preview
                 tempCtx.drawImage(canvas, 0, 0);
                 
-                // Draw the canvas overlay (scale it to match)
                 if (canvasEl.width > 0 && canvasEl.height > 0) {
                     tempCtx.drawImage(canvasEl, 0, 0, tempCanvas.width, tempCanvas.height);
                 }
 
-                // Create PDF (A4 size)
-                const pdf = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: 'a4'
-                });
-
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const aspectRatio = tempCanvas.width / tempCanvas.height;
+                const finalWidth = pdfWidth;
+                const finalHeight = finalWidth / aspectRatio;
                 
-                // Calculate aspect ratio
-                const imgWidth = tempCanvas.width;
-                const imgHeight = tempCanvas.height;
-                
-                // Calculate how many pages we need
-                const ratio = imgWidth / imgHeight;
-                const pageRatio = pdfWidth / pdfHeight;
-                
-                let finalWidth, finalHeight;
-                
-                if (ratio > pageRatio) {
-                    // Image is wider - fit to width
-                    finalWidth = pdfWidth;
-                    finalHeight = pdfWidth / ratio;
-                } else {
-                    // Image is taller - fit to width and split pages
-                    finalWidth = pdfWidth;
-                    finalHeight = pdfWidth / ratio;
-                }
-                
-                // If content fits in one page
                 if (finalHeight <= pdfHeight) {
                     const imgData = tempCanvas.toDataURL('image/jpeg', 1.0);
                     pdf.addImage(imgData, 'JPEG', 0, 0, finalWidth, finalHeight);
-                    
-                    // Add watermark "JEEro" in center
-                    pdf.setFontSize(60);
-                    pdf.setTextColor(200, 200, 200);
-                    pdf.setFont(undefined, 'bold');
-                    pdf.saveGraphicsState();
-                    pdf.setGState(new pdf.GState({ opacity: 0.1 }));
-                    const watermarkText = 'JEEro';
-                    const textWidth = pdf.getTextWidth(watermarkText);
-                    pdf.text(watermarkText, (pdfWidth - textWidth) / 2, pdfHeight / 2, { 
-                        angle: 45,
-                        align: 'center'
-                    });
-                    pdf.restoreGraphicsState();
                 } else {
-                    // Multiple pages needed
                     const pagesNeeded = Math.ceil(finalHeight / pdfHeight);
-                    const pageHeightInCanvas = (tempCanvas.height / pagesNeeded);
+                    const pageHeightInCanvas = tempCanvas.height / pagesNeeded;
                     
                     for (let i = 0; i < pagesNeeded; i++) {
-                        // Create a canvas for each page
                         const pageCanvas = document.createElement('canvas');
                         pageCanvas.width = tempCanvas.width;
                         pageCanvas.height = pageHeightInCanvas;
                         const pageCtx = pageCanvas.getContext('2d');
                         
-                        // Fill with paper color
                         pageCtx.fillStyle = currentPaperColor;
                         pageCtx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
                         
-                        // Draw the slice of content
                         pageCtx.drawImage(
                             tempCanvas,
-                            0, i * pageHeightInCanvas, // Source x, y
-                            tempCanvas.width, pageHeightInCanvas, // Source width, height
-                            0, 0, // Dest x, y
-                            pageCanvas.width, pageCanvas.height // Dest width, height
+                            0, i * pageHeightInCanvas,
+                            tempCanvas.width, pageHeightInCanvas,
+                            0, 0,
+                            pageCanvas.width, pageCanvas.height
                         );
                         
-                        // Add to PDF
                         const pageImgData = pageCanvas.toDataURL('image/jpeg', 1.0);
                         
-                        if (i > 0) {
-                            pdf.addPage();
-                        }
+                        if (i > 0) pdf.addPage();
                         
                         pdf.addImage(pageImgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
                         
-                        // Add watermark "JEEro" in center
-                        pdf.setFontSize(60);
-                        pdf.setTextColor(200, 200, 200);
-                        pdf.setFont(undefined, 'bold');
-                        pdf.saveGraphicsState();
-                        pdf.setGState(new pdf.GState({ opacity: 0.1 }));
-                        const watermarkText = 'JEEro';
-                        const textWidth = pdf.getTextWidth(watermarkText);
-                        pdf.text(watermarkText, (pdfWidth - textWidth) / 2, pdfHeight / 2, { 
-                            angle: 45,
-                            align: 'center'
-                        });
-                        pdf.restoreGraphicsState();
-                        
-                        // Add page number at bottom
                         pdf.setFontSize(10);
                         pdf.setTextColor(150);
-                        pdf.setFont(undefined, 'normal');
                         pdf.text(`Page ${i + 1} of ${pagesNeeded}`, pdfWidth / 2, pdfHeight - 5, { align: 'center' });
                     }
                 }
                 
-                pdf.save('handwritten-notes.pdf');
-                
+                pdf.save('notemaker-pro.pdf');
                 hideLoading();
             } catch (error) {
                 console.error('PDF export error:', error);
@@ -2106,8 +1350,7 @@ Producers → Primary → Secondary → Tertiary
                 const preview = document.getElementById('paperPreview');
                 const canvasEl = document.getElementById('drawingCanvas');
                 
-                // Create high-quality canvas capture
-                const scale = 4; // 4x resolution for high quality
+                const scale = 4;
                 const canvas = await html2canvas(preview, {
                     scale: scale,
                     backgroundColor: currentPaperColor,
@@ -2115,21 +1358,17 @@ Producers → Primary → Secondary → Tertiary
                     useCORS: true
                 });
 
-                // Create a temporary canvas to combine preview and drawings
                 const tempCanvas = document.createElement('canvas');
                 tempCanvas.width = canvas.width;
                 tempCanvas.height = canvas.height;
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                // Draw the preview
                 tempCtx.drawImage(canvas, 0, 0);
                 
-                // Draw the canvas overlay
                 if (canvasEl.width > 0 && canvasEl.height > 0) {
                     tempCtx.drawImage(canvasEl, 0, 0, tempCanvas.width, tempCanvas.height);
                 }
 
-                // Convert to desired format
                 const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
                 const quality = format === 'jpg' ? 0.95 : 1.0;
                 
@@ -2137,7 +1376,7 @@ Producers → Primary → Secondary → Tertiary
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `handwritten-notes.${format}`;
+                    a.download = `notemaker-pro.${format}`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
@@ -2152,98 +1391,215 @@ Producers → Primary → Secondary → Tertiary
             }
         }
 
-        // Theme toggle
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
             const btn = document.querySelector('.theme-toggle');
-            if (document.body.classList.contains('dark-mode')) {
-                btn.textContent = '☀️ Light Mode';
-            } else {
-                btn.textContent = '🌙 Dark Mode';
-            }
+            btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
         }
 
-        // Initialize with example content
-        window.addEventListener('load', () => {
-            document.getElementById('notesInput').value = `# Physics - Motion & Forces 📚
+        function loadPreset() {
+            const presets = [
+                {
+                    name: 'Study Notes',
+                    content: `# Chemistry - Atomic Structure 🧪
 
-## Kinematics Equations
+## Atomic Models
+
+[HIGHLIGHT color="yellow"]Dalton's Model (1803)[/HIGHLIGHT]
+- Atoms are indivisible particles
+- All atoms of same element are identical
+
+[HIGHLIGHT color="blue"]Thomson's Model (1897)[/HIGHLIGHT]
+- Discovered electrons
+- "Plum pudding" model
+
+[HIGHLIGHT color="green"]Rutherford's Model (1911)[/HIGHLIGHT]
+- Nuclear model with electrons orbiting
+- Most of atom is empty space
+
+---
+
+## Electronic Configuration
 
 [FORMULA]
-- v = u + at
-- s = ut + ½at²
-- v² = u² + 2as
+Maximum electrons in shell = 2n²
+where n = shell number
 [/FORMULA]
 
-[NOTE]Where: v=final velocity, u=initial, a=acceleration, t=time, s=displacement[/NOTE]
-
----
-
-## Newton's Laws
-
 [IMP]
-**First Law:** Inertia
-An object maintains its state unless external force acts
+**Aufbau Principle:** Electrons fill lowest energy orbitals first
+**Pauli Exclusion:** Max 2 electrons per orbital
+**Hund's Rule:** Fill orbitals singly before pairing
 [/IMP]
 
-[STAR]**Second Law:** F = ma[/STAR]
+---
 
-> Force = Mass × Acceleration
-> SI Unit: Newton (N)
+## Periodic Trends
 
-**Third Law:** Action = Reaction (opposite directions)
+[BOX]
+**Atomic Radius:** Decreases across period →
+**Ionization Energy:** Increases across period →
+**Electronegativity:** Increases across period →
+[/BOX]
+
+[STAR]Remember: Noble gases are the most stable![/STAR]`,
+                    theme: 'study'
+                },
+                {
+                    name: 'Creative Ideas',
+                    content: `# My Creative Project Ideas 🎨
+
+## Art Projects
+[HIGHLIGHT color="pink"]Abstract Painting Series[/HIGHLIGHT]
+- Explore emotions through color
+- Mixed media experimentation
+- 12-piece collection
+
+> Timeline: 3 months
+> Budget: $500
 
 ---
 
-## Energy Formulas
+## Writing Projects
+[HIGHLIGHT color="purple"]Short Story Collection[/HIGHLIGHT]
+* Science fiction themes
+* Character-driven narratives
+* 10 stories, 5000 words each
+
+==Deadline: End of year==
+
+---
+
+## Music Projects
+[HIGHLIGHT color="orange"]Album Production[/HIGHLIGHT]
++ Electronic/ambient fusion
++ 8 tracks
++ Collaborate with local artists
+
+[TIP]Start with creating mood boards for inspiration![/TIP]`,
+                    theme: 'creative'
+                },
+                {
+                    name: 'Meeting Notes',
+                    content: `# Team Meeting - Project Alpha 📋
+
+**Date:** January 31, 2026
+**Attendees:** Sarah, John, Mike, Emily
+
+---
+
+## Key Discussion Points
+
+[IMP]
+**Project Timeline**
+- Phase 1: Complete by Feb 15
+- Phase 2: March 1 - March 30
+- Final delivery: April 15
+[/IMP]
+
+---
+
+## Action Items
+
+[HIGHLIGHT color="yellow"]Sarah[/HIGHLIGHT]
++ Finalize design mockups
++ Review user feedback
++ Update documentation
+
+[HIGHLIGHT color="blue"]John[/HIGHLIGHT]
++ Backend API development
++ Database optimization
++ Security audit
+
+[HIGHLIGHT color="green"]Mike[/HIGHLIGHT]
++ Frontend implementation
++ Performance testing
++ Bug fixes
+
+---
+
+## Budget Update
 
 [BOX]
-**Kinetic Energy:** KE = ½mv²
-**Potential Energy:** PE = mgh
-**Power:** P = W/t
+**Allocated:** $50,000
+**Spent:** $32,000
+**Remaining:** $18,000
 [/BOX]
 
-[TIP]Try 2-column layout for compact notes![/TIP]
-
-**Different Bullet Styles:**
-- Dash bullets (use -)
-> Arrow bullets (use >)
-* Star bullets (use *)
-+ Check bullets (use +)
-
-==Try the decorative elements panel!== 🎨`;
+[STAR]Next meeting: February 7, 2026[/STAR]`,
+                    theme: 'professional'
+                }
+            ];
+            
+            const preset = presets[Math.floor(Math.random() * presets.length)];
+            document.getElementById('notesInput').value = preset.content;
+            applyTheme(preset.theme);
             updatePreview();
-        });
+        }
 
-        // Save preferences to localStorage
-        window.addEventListener('beforeunload', () => {
-            const preferences = {
-                style: currentStyle,
-                color: currentColor,
-                paperType: currentPaperType,
-                paperColor: currentPaperColor,
-                fontSize: document.getElementById('fontSize').value,
-                lineSpacing: document.getElementById('lineSpacing').value,
-                imperfection: imperfectionLevel
-            };
-            localStorage.setItem('notecraftPreferences', JSON.stringify(preferences));
-        });
+        function loadExampleContent() {
+            document.getElementById('notesInput').value = `# Welcome to NoteCraft Pro! 🎨✨
 
-        // Load preferences on startup
-        window.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('notecraftPreferences');
-            if (saved) {
-                const prefs = JSON.parse(saved);
-                // Apply saved preferences
-                if (prefs.fontSize) document.getElementById('fontSize').value = prefs.fontSize;
-                if (prefs.lineSpacing) document.getElementById('lineSpacing').value = prefs.lineSpacing;
-                if (prefs.imperfection) document.getElementById('imperfection').value = prefs.imperfection;
-                
-                updateFontSize(prefs.fontSize || 20);
-                updateLineSpacing(prefs.lineSpacing || 1.8);
-                updateImperfection(prefs.imperfection || 50);
-            }
-        });
+## Your Smart & Colorful Note-Taking Companion
+
+[HIGHLIGHT color="yellow"]This is a revolutionary note-taking experience![/HIGHLIGHT]
+
+---
+
+## ✨ New Features
+
+[IMP]
+**Multi-Color System**
+- 8 ink colors for different topics
+- 6 highlighter options
+- 10 beautiful paper backgrounds
+[/IMP]
+
+---
+
+## 🎨 Smart Themes
+
+Try these preset color combinations:
+* Study Mode - Perfect for learning
+* Creative - Vibrant and inspiring
+* Professional - Clean and elegant
+* Neon Dark - Eye-catching style
+
+---
+
+## 🖊️ Rich Formatting
+
+[FORMULA]
+Use special tags for:
+- [FORMULA] for equations
+- [HIGHLIGHT] for important text
+- [BOX] for key information
+[/FORMULA]
+
+[STAR]Headers automatically get beautiful gradients![/STAR]
+
+---
+
+## 🎯 Quick Tips
+
+> Use different bullet styles with -, >, *, +
+> Draw directly on your notes with the pen tool
+> Mix and match colors for visual organization
+> Export as PDF or PNG with all colors preserved
+
+[TIP]Click "Load Preset" to see more examples![/TIP]
+
+==Start creating amazing notes today!== 🚀`;
+            updatePreview();
+        }
     </script>
 </body>
 </html>
